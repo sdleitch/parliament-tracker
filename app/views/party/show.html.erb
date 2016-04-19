@@ -1,0 +1,8 @@
+<%= @party.name %>
+<ul>
+<% @party.members.each do |member| %>
+  <li>
+    <%= link_to member.firstname + ' ' + member.lastname, '/member/' + member.id.to_s %>
+  </li>
+<% end %>
+</ul>
