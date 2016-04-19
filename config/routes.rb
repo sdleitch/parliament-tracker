@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :member, :party
+  
+  resources :member,
+            :party
 
   get 'parliment/index'
 
