@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160418232553) do
+ActiveRecord::Schema.define(version: 20160419162055) do
 
   create_table "members", force: :cascade do |t|
     t.integer  "party_id"
@@ -20,6 +20,9 @@ ActiveRecord::Schema.define(version: 20160418232553) do
     t.string   "img_filename"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.string   "email"
+    t.string   "website"
+    t.string   "province"
   end
 
   add_index "members", ["party_id"], name: "index_members_on_party_id"

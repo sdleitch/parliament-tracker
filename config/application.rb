@@ -1,6 +1,11 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require 'open-uri'
+
+# to turn accented names into uri-safe Strings
+require 'i18n'
+I18n.config.available_locales = :en
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
