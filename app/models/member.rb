@@ -8,7 +8,7 @@ class Member < ActiveRecord::Base
     if (self.img_filename == nil) || (self.email == nil)
 
       base_uri = URI("http://www.parl.gc.ca/Parliamentarians/en/members/")
-      uri_safe_string = I18n.transliterate("#{self.firstname}-#{self.lastname}".gsub(' ', ''))
+      uri_safe_string = I18n.transliterate("#{self.firstname}-#{self.lastname}".delete(' .'))
       bio = Nokogiri::HTML(open(base_uri + uri_safe_string))
 
       # scrape headshot
