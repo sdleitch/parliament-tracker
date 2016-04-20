@@ -1,0 +1,2 @@
+class ElectoralDistrictController < ApplicationController
+end

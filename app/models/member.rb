@@ -1,7 +1,7 @@
 class Member < ActiveRecord::Base
   belongs_to :party
+  belongs_to :electoral_district
   has_and_belongs_to_many :parliments
-
 
   # Scrape MP headshots and emails from www.parl.gc.ca
   def scrape_member_info

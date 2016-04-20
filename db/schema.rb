@@ -11,20 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419162055) do
+ActiveRecord::Schema.define(version: 20160420033619) do
+
+  create_table "electoral_districts", force: :cascade do |t|
+    t.string   "name"
+    t.text     "geo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "members", force: :cascade do |t|
     t.integer  "party_id"
     t.string   "firstname"
     t.string   "lastname"
     t.string   "img_filename"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
     t.string   "email"
     t.string   "website"
     t.string   "province"
+    t.integer  "electoral_district_id"
   end
 
+  add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"
   add_index "members", ["party_id"], name: "index_members_on_party_id"
 
   create_table "members_parliments", id: false, force: :cascade do |t|
