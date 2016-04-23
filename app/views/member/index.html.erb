@@ -2,7 +2,7 @@
 <ul>
   <% @members.each do |member| %>
   <li>
-    <%= link_to "#{member.firstname} #{member.lastname}", "/member/#{member.id}" %> <%= link_to member.party.name, "/party/#{member.party_id}" %>
+    <%= link_to member.fullname, member %> <%= link_to member.party.name, member.party %>
   </li>
   <% end %>
 </ul>

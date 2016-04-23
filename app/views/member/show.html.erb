@@ -1,4 +1,4 @@
-<img src="/headshots/<%= @member.img_filename %>" alt="<%= @member.firstname %> <%= @member.lastname %>" /><br>
-<%= @member.firstname %> <%= @member.lastname %><br>
+<img src="/headshots/<%= @member.img_filename %>" alt="<%= @member.fullname %>" /><br>
+<%= @member.fullname %><br>
 Email: <%= link_to @member.email, "mailto:#{@member.email}" %><br>
-<%= link_to @member.party.name, "/party/" + @member.party_id.to_s %>
+<%= link_to @member.party.name, @member.party %>
