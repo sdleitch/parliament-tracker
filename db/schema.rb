@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420033619) do
+ActiveRecord::Schema.define(version: 20160423210633) do
 
   create_table "electoral_districts", force: :cascade do |t|
     t.string   "name"
     t.text     "geo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "province"
   end
 
   create_table "members", force: :cascade do |t|
@@ -29,8 +30,8 @@ ActiveRecord::Schema.define(version: 20160420033619) do
     t.datetime "updated_at",            null: false
     t.string   "email"
     t.string   "website"
-    t.string   "province"
     t.integer  "electoral_district_id"
+    t.string   "honorific"
   end
 
   add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"

@@ -3,8 +3,31 @@ class Member < ActiveRecord::Base
   belongs_to :electoral_district
   has_and_belongs_to_many :parliments
 
-  def fullname
-    return "#{self.firstname} #{self.lastname}"
+  # pass false to turn off honorific
+  def fullname(honorific=true)
+    if honorific == false
+      return "#{self.firstname} #{self.lastname}"
+    else
+      return "#{self.honorific} #{self.firstname} #{self.lastname}"
+    end
+  end
+
+  # Update
+  def self.find_members
+    members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
+    members = Hash.from_xml(members_xml)
+    members = members['List']['MemberOfParliament']
+
+    members.each do |member|
+      new_member = Member.find_or_create_by(
+        firstname: member["PersonOfficialFirstName"],
+        lastname: member["PersonOfficialLastName"],
+      )
+      new_member.honorific = member["PersonShortHonorific"]
+      new_member.scrape_member_info
+      new_member.party = Party.find_by(name: member["CaucusShortName"])
+      new_member.save
+    end
   end
 
   # Scrape MP headshots and emails from www.parl.gc.ca
