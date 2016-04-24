@@ -3,17 +3,21 @@ class Member < ActiveRecord::Base
   belongs_to :electoral_district
   has_and_belongs_to_many :parliments
 
-  # pass false to turn off honorific
-  def fullname(honorific=true)
-    if honorific == false
-      return "#{self.firstname} #{self.lastname}"
-    else
+  validates :firstname, presence: true
+  validates :lastname, presence: true
+  validates :email, uniqueness: true
+
+  # pass true to turn on honorific
+  def fullname(honorific=false)
+    if (honorific == true) && (self.honorific != nil)
       return "#{self.honorific} #{self.firstname} #{self.lastname}"
+    else
+      return "#{self.firstname} #{self.lastname}"
     end
   end
 
   # Update
-  def self.find_members
+  def self.get_members
     members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
     members = Hash.from_xml(members_xml)
     members = members['List']['MemberOfParliament']
@@ -26,7 +30,6 @@ class Member < ActiveRecord::Base
       new_member.honorific = member["PersonShortHonorific"]
       new_member.scrape_member_info
       new_member.party = Party.find_by(name: member["CaucusShortName"])
-      new_member.save
     end
   end
 
