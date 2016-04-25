@@ -20,4 +20,4 @@
 /db/migrate/*
 
 # Ignore headshot files
-/public/headshots/*
+/public/system/members/*
