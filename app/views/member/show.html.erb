@@ -1,4 +1,5 @@
-<img src="/headshots/<%= @member.img_filename %>" alt="<%= @member.fullname %>" /><br>
-<%= @member.fullname %><br>
+<%= @member.fullname(true) %><br>
+<%= image_tag @member.headshot.url %><br>
+Member of Parliament for <%= @member.electoral_district.name %><br>
 Email: <%= link_to @member.email, "mailto:#{@member.email}" %><br>
 <%= link_to @member.party.name, @member.party %>

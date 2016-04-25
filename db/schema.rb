@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160423210633) do
+ActiveRecord::Schema.define(version: 20160425021753) do
 
   create_table "electoral_districts", force: :cascade do |t|
     t.string   "name"
@@ -25,13 +25,16 @@ ActiveRecord::Schema.define(version: 20160423210633) do
     t.integer  "party_id"
     t.string   "firstname"
     t.string   "lastname"
-    t.string   "img_filename"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.string   "email"
     t.string   "website"
     t.integer  "electoral_district_id"
     t.string   "honorific"
+    t.string   "headshot_file_name"
+    t.string   "headshot_content_type"
+    t.integer  "headshot_file_size"
+    t.datetime "headshot_updated_at"
   end
 
   add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"
