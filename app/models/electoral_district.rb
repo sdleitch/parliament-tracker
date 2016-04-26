@@ -8,13 +8,14 @@ class ElectoralDistrict < ActiveRecord::Base
     districts = Hash.from_xml(districts_xml)
     districts = districts["List"]["Constituency"]
 
-
     districts.each do |district|
       new_district = ElectoralDistrict.find_or_create_by(
         name: district["Name"],
         province: district["ProvinceTerritoryName"]
       )
       new_district.geo = new_district.get_geography(districts_geojson) if new_district.geo == nil
+
+      # Find or create Member and associate, unless nil (vacant)
       unless district["CurrentPersonOfficialLastName"] == nil
         new_district.member =  Member.get_or_build_member(
           district["CurrentPersonOfficialFirstName"],
@@ -23,6 +24,7 @@ class ElectoralDistrict < ActiveRecord::Base
           district["CurrentCaucusShortName"]
         )
       end
+
       new_district.save!
     end
   end
