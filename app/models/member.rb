@@ -16,7 +16,7 @@ class Member < ActiveRecord::Base
   # pass true to turn on honorific
   def fullname(honorific=false)
     if (honorific == true) && (self.honorific != nil)
-      return "#{self.honorific} #{self.firstname} #{self.lastname}"
+      return "The #{self.honorific} #{self.firstname} #{self.lastname}"
     else
       return "#{self.firstname} #{self.lastname}"
     end
