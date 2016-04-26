@@ -1,5 +1,6 @@
-<%= @member.fullname(true) %><br>
+<h1><%= @member.fullname(true) %></h1>
 <%= image_tag @member.headshot.url %><br>
-Member of Parliament for <%= @member.electoral_district.name %><br>
-Email: <%= link_to @member.email, "mailto:#{@member.email}" %><br>
-<%= link_to @member.party.name, @member.party %>
+<h3>Member of Parliament for <%= @member.electoral_district.name %></h3>
+<div class="district-map"></div>
+<p>Email: <%= link_to @member.email, "mailto:#{@member.email}" %></p>
+<p><%= link_to @member.party.name, @member.party %></p>

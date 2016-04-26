@@ -11,6 +11,7 @@ class Member < ActiveRecord::Base
   has_attached_file :headshot
   validates_attachment_content_type :headshot, :content_type => /\Aimage\/.*\Z/
 
+  @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
 
   # pass true to turn on honorific
   def fullname(honorific=false)
@@ -21,25 +22,37 @@ class Member < ActiveRecord::Base
     end
   end
 
-  # Update
-  def self.get_members
-    members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
+  # Update all members at once. Right now is not used anywhere.
+  def self.get_all_members(members_xml=@@members_xml)
     members = Hash.from_xml(members_xml)
     members = members['List']['MemberOfParliament']
 
     members.each do |member|
-      new_member = Member.find_or_create_by(
-        firstname: member["PersonOfficialFirstName"],
-        lastname: member["PersonOfficialLastName"],
+      Member.get_or_build_member(
+        member["PersonOfficialFirstName"],
+        member["PersonOfficialLastName"],
+        member["PersonShortHonorific"],
+        member["CaucusShortName"]
       )
-      new_member.honorific = member["PersonShortHonorific"]
-      new_member.party = Party.find_by(name: member["CaucusShortName"])
-      new_member.scrape_member_info
-      new_member.save!
     end
   end
 
-  # Scrape MP headshots and emails from www.parl.gc.ca
+  # Find MP, if doesn't exist build/scrape with various methods.
+  # Called when ElectoralDistrict is built.
+  # Also used by Member#get_all_members but that is not currently used.
+  def self.get_or_build_member(firstname, lastname, honorific, party_name)
+    member = Member.find_or_create_by(
+      firstname: firstname,
+      lastname: lastname,
+    )
+    member.honorific = honorific
+    member.party = Party.find_or_create_by(name: party_name)
+    member.scrape_member_info
+    member.save!
+    return member
+  end
+
+  # Method to scrape MP headshots and emails from www.parl.gc.ca in single method
   def scrape_member_info
     if (self.headshot_file_name == nil) || (self.email == nil)
 
@@ -58,18 +71,10 @@ class Member < ActiveRecord::Base
         self.scrape_email(bio)
       end
 
-    self.save!
     end
   end
 
-  # def scrape_headshot_image(bio, filename_without_ext)
-  #   headshot_url = URI.escape(bio.css('div.profile img.picture')[0].attr('src'))
-  #   open("public/headshots/#{filename_without_ext}.jpg", 'wb') do |img|
-  #     img << open(headshot_url).read
-  #     self.img_filename = "#{filename_without_ext}.jpg"
-  #   end
-  # end
-
+  # get MP email from www.parl.gc.ca
   def scrape_email(bio)
     attributes = bio.css('.profile.overview.header a')
     attributes.each do |attribute|
@@ -77,11 +82,9 @@ class Member < ActiveRecord::Base
     end
   end
 
+  # get MP headshot
   def headshot_remote_url(url_value)
     self.headshot = URI.parse(url_value)
-    # Assuming url_value is http://example.com/photos/face.png
-    # avatar_file_name == "face.png"
-    # avatar_content_type == "image/png"
     @headshot_remote_url = url_value
   end
 
