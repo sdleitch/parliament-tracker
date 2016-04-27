@@ -2,6 +2,7 @@ class Member < ActiveRecord::Base
   belongs_to :party
   belongs_to :electoral_district
   has_and_belongs_to_many :parliments
+  has_many :bills
 
   validates :firstname, presence: true
   validates :lastname, presence: true
@@ -11,7 +12,10 @@ class Member < ActiveRecord::Base
   has_attached_file :headshot
   validates_attachment_content_type :headshot, :content_type => /\Aimage\/.*\Z/
 
-  @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
+  def self.get_members
+    @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
+    @@members = Hash.from_xml(members_xml)['List']['MemberOfParliament']
+  end
 
   # pass true to turn on honorific
   def fullname(honorific=false)
@@ -23,12 +27,9 @@ class Member < ActiveRecord::Base
   end
 
   # Update all members at once. Right now is not used anywhere.
-  def self.get_all_members(members_xml=@@members_xml)
-    members = Hash.from_xml(members_xml)
-    members = members['List']['MemberOfParliament']
-
+  def self.create_members(members=@@members)
     members.each do |member|
-      Member.get_or_build_member(
+      Member.update_or_create_member(
         member["PersonOfficialFirstName"],
         member["PersonOfficialLastName"],
         member["PersonShortHonorific"],
@@ -40,7 +41,7 @@ class Member < ActiveRecord::Base
   # Find MP, if doesn't exist build/scrape with various methods.
   # Called when ElectoralDistrict is built.
   # Also used by Member#get_all_members but that is not currently used.
-  def self.get_or_build_member(firstname, lastname, honorific, party_name)
+  def self.update_or_create_member(firstname, lastname, honorific, party_name)
     member = Member.find_or_create_by(
       firstname: firstname,
       lastname: lastname,

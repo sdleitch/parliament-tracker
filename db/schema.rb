@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160425021753) do
+ActiveRecord::Schema.define(version: 20160426211630) do
+
+  create_table "bills", force: :cascade do |t|
+    t.date     "date_introduced"
+    t.string   "prefix"
+    t.integer  "number"
+    t.string   "title_long"
+    t.string   "title_short"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "member_id"
+    t.string   "bill_type"
+    t.integer  "parliament_number"
+  end
 
   create_table "electoral_districts", force: :cascade do |t|
     t.string   "name"
