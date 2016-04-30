@@ -38,20 +38,23 @@ class VoteTally < ActiveRecord::Base
   end
 
   def tally_votes
-    yea = 0
-    nay = 0
-    self.votes.each do |vote|
-      if vote.vote_decision == true
-        yea += 1
-      elsif vote.vote_decision == false
-        nay += 1
-      end
-    end
-    return yea > nay ? yea : nay
+    return self.yeas > self.nays ? true : false
   end
 
   def get_member(member_page_uri)
     # fuck this the parl website is shitty to scrape
+  end
+
+  def yeas
+    count = 0
+    self.votes.each { |vote| count += 1 if vote.vote_decision == true }
+    return count
+  end
+
+  def nays
+    count = 0
+    self.votes.each { |vote| count += 1 if vote.vote_decision == false }
+    return count
   end
 
 end
