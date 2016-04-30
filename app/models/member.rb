@@ -3,6 +3,8 @@ class Member < ActiveRecord::Base
   belongs_to :electoral_district
   has_and_belongs_to_many :parliments
   has_many :bills
+  has_many :vote_tallies
+  has_many :votes
 
   validates :firstname, presence: true
   validates :lastname, presence: true

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date_introduced: 2016-04-26
+  prefix: MyString
+  number: 1
+  title_long: MyString
+  title_short: MyString
+  type: 
+
+two:
+  date_introduced: 2016-04-26
+  prefix: MyString
+  number: 1
+  title_long: MyString
+  title_short: MyString
+  type: 

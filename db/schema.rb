@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160426211630) do
+ActiveRecord::Schema.define(version: 20160429191703) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -21,10 +21,12 @@ ActiveRecord::Schema.define(version: 20160426211630) do
     t.string   "title_short"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.integer  "member_id"
     t.string   "bill_type"
     t.integer  "parliament_number"
+    t.integer  "member_id"
   end
+
+  add_index "bills", ["member_id"], name: "index_bills_on_member_id"
 
   create_table "electoral_districts", force: :cascade do |t|
     t.string   "name"
@@ -82,5 +84,30 @@ ActiveRecord::Schema.define(version: 20160426211630) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "vote_tallies", force: :cascade do |t|
+    t.boolean  "agreed_to"
+    t.integer  "vote_number"
+    t.date     "date"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.text     "para"
+    t.integer  "bill_id"
+    t.integer  "member_id"
+  end
+
+  add_index "vote_tallies", ["bill_id"], name: "index_vote_tallies_on_bill_id"
+  add_index "vote_tallies", ["member_id"], name: "index_vote_tallies_on_member_id"
+
+  create_table "votes", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "vote_tally_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.boolean  "vote_decision"
+  end
+
+  add_index "votes", ["member_id"], name: "index_votes_on_member_id"
+  add_index "votes", ["vote_tally_id"], name: "index_votes_on_vote_tally_id"
 
 end
