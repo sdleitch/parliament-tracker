@@ -20,7 +20,6 @@ class VoteTally < ActiveRecord::Base
     votes = Hash.from_xml(votes_xml)["Vote"]["Participant"]
     new_tally.get_votes(votes)
     new_tally.agreed_to = new_tally.tally_votes
-    new_tally.save!
   end
 
   def get_votes(votes)
