@@ -13,13 +13,14 @@ class VoteTally < ActiveRecord::Base
     new_tally = VoteTally.find_or_create_by(
       vote_number: vote_number,
       date: date,
-      para: para
+      para: para,
     )
 
     votes_xml = open(vote_page_uri.to_s + "&xml=True").read
     votes = Hash.from_xml(votes_xml)["Vote"]["Participant"]
     new_tally.get_votes(votes)
     new_tally.agreed_to = new_tally.tally_votes
+    new_tally.save!
   end
 
   def get_votes(votes)
@@ -27,22 +28,18 @@ class VoteTally < ActiveRecord::Base
       if (self.votes & Vote.where(member: Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"]))).empty?
         new_vote = Vote.new
         new_vote.member = Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"])
-        if vote["RecordedVote"]["Yea"] == "1"
-          new_vote.vote_decision = true
-        elsif vote["RecordedVote"]["Nay"] == "1"
-          new_vote.vote_decision = false
-        end
+        new_vote.vote_decision = vote["RecordedVote"]["Yea"] == "1" ? true : false
         self.votes << new_vote
       end
     end
   end
 
-  def tally_votes
-    return self.yeas > self.nays ? true : false
-  end
-
   def get_member(member_page_uri)
     # fuck this the parl website is shitty to scrape
+  end
+
+  def tally_votes
+    return self.yeas > self.nays ? true : false
   end
 
   def yeas
