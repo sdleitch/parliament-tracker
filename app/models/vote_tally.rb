@@ -24,7 +24,7 @@ class VoteTally < ActiveRecord::Base
 
   def get_votes(votes)
     votes.each do |vote|
-      # unless self.votes & Votes.where(member: Member.where(firstname: vote["FirstName"], lastname: vote["LastName"])) != nil
+      if (self.votes & Vote.where(member: Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"]))).empty?
         new_vote = Vote.new
         new_vote.member = Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"])
         if vote["RecordedVote"]["Yea"] == "1"
@@ -33,7 +33,7 @@ class VoteTally < ActiveRecord::Base
           new_vote.vote_decision = false
         end
         self.votes << new_vote
-      # end
+      end
     end
   end
 
