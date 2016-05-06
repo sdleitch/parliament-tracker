@@ -1,7 +1,6 @@
 class Member < ActiveRecord::Base
   belongs_to :party
   belongs_to :electoral_district
-  has_and_belongs_to_many :parliments
   has_many :bills
   has_many :vote_tallies
   has_many :votes

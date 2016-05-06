@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429191703) do
+ActiveRecord::Schema.define(version: 20160506174326) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -54,30 +54,6 @@ ActiveRecord::Schema.define(version: 20160429191703) do
 
   add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"
   add_index "members", ["party_id"], name: "index_members_on_party_id"
-
-  create_table "members_parliments", id: false, force: :cascade do |t|
-    t.integer "parliment_id", null: false
-    t.integer "member_id",    null: false
-  end
-
-  add_index "members_parliments", ["member_id", "parliment_id"], name: "index_members_parliments_on_member_id_and_parliment_id"
-  add_index "members_parliments", ["parliment_id", "member_id"], name: "index_members_parliments_on_parliment_id_and_member_id"
-
-  create_table "parliments", force: :cascade do |t|
-    t.integer  "number"
-    t.date     "startdate"
-    t.date     "enddate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "parliments_parties", id: false, force: :cascade do |t|
-    t.integer "parliment_id", null: false
-    t.integer "party_id",     null: false
-  end
-
-  add_index "parliments_parties", ["parliment_id", "party_id"], name: "index_parliments_parties_on_parliment_id_and_party_id"
-  add_index "parliments_parties", ["party_id", "parliment_id"], name: "index_parliments_parties_on_party_id_and_parliment_id"
 
   create_table "parties", force: :cascade do |t|
     t.string   "name"
