@@ -1,6 +1,8 @@
 <h1><%= @member.fullname(true) %></h1>
 <%= image_tag @member.headshot.url %><br>
-<h3><%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %> Member of Parliament for <%= @member.electoral_district.name %></h3>
+<h3>
+  Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
+</h3>
 <%= content_tag :div, id: "map", style: "height: 400px", data: { geo: @member.electoral_district.geo } do %>
 <% end %>
 <!-- <div id="map" style="height: 400px"></div> -->

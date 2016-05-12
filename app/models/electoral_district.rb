@@ -14,7 +14,7 @@ class ElectoralDistrict < ActiveRecord::Base
         name: district["Name"],
         province: district["ProvinceTerritoryName"]
       )
-      new_district.geo = new_district.get_geography(districts_geojson) if new_district.geo == nil
+      new_district.geo = new_district.get_geography(districts_geojson) if new_district.geo == nil || new_district.geo == "null"
 
       # Find or create Member and associate, unless nil (vacant)
       unless district["CurrentPersonOfficialLastName"] == nil
@@ -32,9 +32,18 @@ class ElectoralDistrict < ActiveRecord::Base
 
   # return GeoJSON string of ElectoralDistrict geometry
   def get_geography(geojson=@@districts_geojson)
+    # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
+    # to match ASCII-removed districts from GeoJSON to real district names
+    encoding_options = {
+      :invalid           => :replace,  # Replace invalid byte sequences
+      :undef             => :replace,  # Replace anything not defined in ASCII
+      :replace           => '',        # Use a blank for those replacements
+    }
+
     geo = JSON.parse(geojson)
     features = geo["features"]
-    feature_geo = features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--") }.first
+    # This will return the first in a single-element array of hashes of GeoJSON
+    feature_geo = features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), encoding_options) }.first
     return feature_geo.to_json
   end
 
