@@ -1,6 +1,12 @@
 <h1><%= @member.fullname(true) %></h1>
 <%= image_tag @member.headshot.url %><br>
 <h3>Member of Parliament for <%= @member.electoral_district.name %></h3>
-<div class="district-map"></div>
+<%= content_tag :div, id: "map", style: "height: 400px", data: {geo: @member.electoral_district.geo} do %>
+<% end %>
+<!-- <div id="map" style="height: 400px"></div> -->
 <p>Email: <%= link_to @member.email, "mailto:#{@member.email}" %></p>
 <p><%= link_to @member.party.name, @member.party %></p>
+<h2>Votes</h2>
+<% @member.votes.each do |vote| %>
+  <%=  vote.vote_decision == true ? "Yea" : "Nay" %>
+<% end %>
