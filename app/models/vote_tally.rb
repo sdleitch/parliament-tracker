@@ -8,7 +8,7 @@ class VoteTally < ActiveRecord::Base
     vote_details = page.at_css('#VoteDetailsHeader')
     vote_number = vote_details.at_css('div div').content.strip[/\d+/].to_i
     date = vote_details.at_css('div div:nth-child(3)').content.to_date
-    para = vote_details.at_css('.voteContextArea').content.strip
+    para = vote_details.at_css('.voteContextArea').content.strip if vote_details.at_css('.voteContextArea')
 
     new_tally = VoteTally.find_or_create_by(
       vote_number: vote_number,

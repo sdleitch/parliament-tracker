@@ -44,9 +44,11 @@ class Bill < ActiveRecord::Base
     # votes = votes_page.css(".VoteLink")
     vote_links = votes_page.css(".VoteLink").select { |vote| vote.attr('href') }
 
-    vote_links.each do |vote_link|
-      new_tally = VoteTally.create_vote_tally(base_uri + vote_link.attr('href'))
-      self.vote_tallies << new_tally
+    if vote_links.length > self.vote_tallies.length
+      vote_links.each do |vote_link|
+        new_tally = VoteTally.create_vote_tally(base_uri + vote_link.attr('href'))
+        self.vote_tallies << new_tally
+      end
     end
   end
 
