@@ -3,7 +3,7 @@ class ElectoralDistrict < ActiveRecord::Base
 
   @@districts_geojson = File.read("public/districts.geojson")
 
-  def self.get_districts
+  def self.scrape_districts
     @@districts_xml = open('http://www.parl.gc.ca/Parliamentarians/en/constituencies/export?output=XML').read
     @@districts = Hash.from_xml(@@districts_xml)["List"]["Constituency"]
   end

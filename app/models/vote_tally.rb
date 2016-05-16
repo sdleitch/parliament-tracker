@@ -21,14 +21,15 @@ class VoteTally < ActiveRecord::Base
     new_tally.get_votes(votes)
     new_tally.agreed_to = new_tally.tally_votes
     new_tally.save!
+    return new_tally
   end
 
   def get_votes(votes)
     votes.each do |vote|
       member = Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"])
-      if (self.votes & member.votes).empty?
+      if (!member) || ((self.votes & member.votes).empty?)
         new_vote = Vote.new
-        new_vote.member = member
+        new_vote.member = member if member
         new_vote.vote_decision = vote["RecordedVote"]["Yea"] == "1" ? true : false
         self.votes << new_vote
       end

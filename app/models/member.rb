@@ -13,7 +13,7 @@ class Member < ActiveRecord::Base
   has_attached_file :headshot
   validates_attachment_content_type :headshot, :content_type => /\Aimage\/.*\Z/
 
-  def self.get_members
+  def self.scrape_members
     @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
     @@members = Hash.from_xml(members_xml)['List']['MemberOfParliament']
   end

@@ -8,6 +8,18 @@
 <!-- <div id="map" style="height: 400px"></div> -->
 <p>Email: <%= link_to @member.email, "mailto:#{@member.email}" %></p>
 <h2>Votes</h2>
-<% @member.votes.each do |vote| %>
-  <%=  vote.vote_decision == true ? "Yea" : "Nay" %>
-<% end %>
+<table>
+  <tbody>
+    <tr>
+      <th>Name</th><th>Date</th><th>Position</th><th>Vote result</th>
+    </tr>
+    <% @member.votes.each do |vote| %>
+    <tr>
+      <th><%= vote.vote_tally.para.truncate(20) %></th>
+      <th><%= vote.vote_tally.date %></th>
+      <th><%=  vote.vote_decision == true ? "Yea" : "Nay" %></th>
+      <th><%= vote.vote_tally.agreed_to == true ? "Agreed To" : "Negatived" %></th>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
