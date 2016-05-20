@@ -7,8 +7,8 @@ Sponsored by <%= link_to @bill.member.fullname, @bill.member %>
   <tbody>
     <% @bill.vote_tallies.each do |tally| %>
       <tr>
-        <th><%= tally.date %></th>
-        <th><%= tally.agreed_to %></th>
+        <th><%= tally.date.strftime("%b %d, %Y") %></th>
+        <th><%= tally.agreed_to == true ? "Agreed To" : "Negatived" %></th>
       </tr>
     <% end %>
   </tbody>
