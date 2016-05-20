@@ -1,0 +1,15 @@
+<h4><%= @bill.bill_number %>: <%= @bill.title_long ? @bill.title_long : @bill.title_short %></h4>
+Introduced <%= @bill.date_introduced.to_formatted_s(:long) %>
+Sponsored by <%= link_to @bill.member.fullname, @bill.member %>
+<p>
+</p>
+<table>
+  <tbody>
+    <% @bill.vote_tallies.each do |tally| %>
+      <tr>
+        <th><%= tally.date %></th>
+        <th><%= tally.agreed_to %></th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
