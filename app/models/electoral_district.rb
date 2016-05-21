@@ -47,4 +47,7 @@ class ElectoralDistrict < ActiveRecord::Base
     return feature_geo.to_json
   end
 
+  # Possible vote % in previous election
+  # http://www.elections.ca/Scripts/vis/PastResults?L=e&ED=13002&EV=99&EV_TYPE=6&QID=-1&PAGEID=28
+  # ED=13002 == FEDNUM in geo. Where does this come from?
 end

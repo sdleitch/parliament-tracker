@@ -15,7 +15,7 @@ class Member < ActiveRecord::Base
 
   def self.scrape_members
     @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
-    @@members = Hash.from_xml(members_xml)['List']['MemberOfParliament']
+    @@members = Hash.from_xml(@@members_xml)['List']['MemberOfParliament']
   end
 
   # pass true to turn on honorific
@@ -89,5 +89,9 @@ class Member < ActiveRecord::Base
     self.headshot = URI.parse(url_value)
     @headshot_remote_url = url_value
   end
+
+  # Possible vote % in previous election
+  # http://www.elections.ca/Scripts/vis/PastResults?L=e&ED=13002&EV=99&EV_TYPE=6&QID=-1&PAGEID=28
+  # ?ED == FEDNUM in electoral_district.geo. Where does this come from?
 
 end
