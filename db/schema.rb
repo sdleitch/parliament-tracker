@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160506174326) do
+ActiveRecord::Schema.define(version: 20160520020053) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20160506174326) do
     t.string   "bill_type"
     t.integer  "parliament_number"
     t.integer  "member_id"
+    t.text     "summary"
   end
 
   add_index "bills", ["member_id"], name: "index_bills_on_member_id"
