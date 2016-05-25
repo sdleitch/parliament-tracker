@@ -16,6 +16,14 @@ class VoteTally < ActiveRecord::Base
       para: para,
     )
 
+    if new_tally.member == nil
+      link_nodes = page.css("#VoteDetailsHeader > div:nth-child(2) a.WebOption")
+      member_link_node = link_nodes.find { |node| node.attr('onclick') =~ /'Affiliation',\d{6},/ }
+      redirect_id = member_link_node.attr('onclick').match(/\d{6}/).to_s
+      member_page_uri = "http://www.parl.gc.ca/parliamentarians/en/members/profileredirect?affiliationId=#{redirect_id}"
+      new_tally.member = new_tally.get_member(member_page_uri)
+    end
+
     votes_xml = open(vote_page_uri.to_s + "&xml=True").read
     votes = Hash.from_xml(votes_xml)["Vote"]["Participant"]
     new_tally.get_votes(votes)
@@ -37,7 +45,15 @@ class VoteTally < ActiveRecord::Base
   end
 
   def get_member(member_page_uri)
-    # fuck this the parl website is shitty to scrape
+    member_page = Nokogiri::HTML(open(member_page_uri))
+    scraped_name = member_page.at_css("div.profile > h2").content
+    member = Member.where(
+      # SQL LIKE match the find firstname AND lastname
+      # in the name scraped (scraped_name) from parliament profile.
+      "'#{scraped_name}' LIKE '%'||firstname||'%'
+      AND '#{scraped_name}' LIKE '%'||lastname||'%'"
+    ).first
+    return member
   end
 
   def tally_votes
