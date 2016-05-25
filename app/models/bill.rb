@@ -1,6 +1,6 @@
 class Bill < ActiveRecord::Base
   belongs_to :member
-  has_many :vote_tallies
+  has_many :vote_tallies, dependent: :destroy
 
   def bill_number
     return "#{self.prefix}-#{self.number}"
