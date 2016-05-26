@@ -2,16 +2,19 @@ class Bill < ActiveRecord::Base
   belongs_to :member
   has_many :vote_tallies, dependent: :destroy
 
+  # class methods for Bill
   class << self
 
     # Download bills xml, convert to Hash
     def scrape_bills
       @@bills_xml = open("http://www.parl.gc.ca/LEGISInfo/Home.aspx?language=E&ParliamentSession=42-1&Mode=1&download=xml").read
       @@bills = Hash.from_xml(@@bills_xml)['Bills']['Bill'] # Scraped Array of bills
+      return @@bills
     end
-    handle_asynchronously :scrape_bills, :run_at => 1.minutes.from_now
 
-    def create_bills(bills=@@bills)
+    def create_bills
+      bills = self.scrape_bills
+
       bills.each do |bill|
         new_bill = Bill.find_or_create_by(parliament_number: bill["id"])
 
@@ -25,14 +28,15 @@ class Bill < ActiveRecord::Base
         end
 
         new_bill.member = Member.find_by(
-        firstname: bill["SponsorAffiliation"]["Person"]["FirstName"],
-        lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
-        )
+          firstname: bill["SponsorAffiliation"]["Person"]["FirstName"],
+          lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
+        ) if new_bill.member == nil
 
         new_bill.get_vote_tallies
         new_bill.save!
       end
     end
+    handle_asynchronously :create_bills, :run_at => 15.seconds.from_now
 
   end
 
