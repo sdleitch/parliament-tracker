@@ -27,6 +27,12 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def test_async
+    puts self.fullname + "\n--------------\n"
+    p self
+  end
+  handle_asynchronously :test_async, run_at: 10.seconds.from_now
+
   # Update all members at once. Right now is not used anywhere.
   def self.create_members(members=@@members)
     members.each do |member|
