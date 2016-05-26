@@ -1,12 +1,7 @@
 Rails.application.routes.draw do
 
-  get 'member/:id' => 'member#show'
-  get 'member' => 'member#index'
-
-  get 'party/:id' => 'party#show'
-  get 'party' => 'party#index'
-
-  get 'bill/:id' => 'bill#show'
+  resources :member,
+            :party
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

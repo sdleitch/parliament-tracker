@@ -1,15 +1,7 @@
 <h4><%= @bill.bill_number %>: <%= @bill.title_long ? @bill.title_long : @bill.title_short %></h4>
-Introduced <%= @bill.date_introduced.to_formatted_s(:long) %>
-Sponsored by <%= link_to @bill.member.fullname, @bill.member %>
-<p>
-</p>
-<table>
-  <tbody>
-    <% @bill.vote_tallies.each do |tally| %>
-      <tr>
-        <th><%= tally.date.strftime("%b %d, %Y") %></th>
-        <th><%= tally.agreed_to == true ? "Agreed To" : "Negatived" %></th>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<p>Introduced <%= @bill.date_introduced.to_formatted_s(:long) %></p>
+<p>Sponsored by <%= link_to @bill.member.fullname, @bill.member %></p>
+<% @bill.vote_tallies.each do |tally| %>
+  <%= tally.date.strftime("%b %d, %Y") %>
+  <%= tally.agreed_to == true ? "Agreed To" : "Negatived" %>
+<% end %>

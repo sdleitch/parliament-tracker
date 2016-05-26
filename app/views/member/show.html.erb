@@ -7,7 +7,15 @@
 <% end %>
 <!-- <div id="map" style="height: 400px"></div> -->
 <p>Email: <%= link_to @member.email, "mailto:#{@member.email}" %></p>
-<h2>Votes</h2>
+<h3>Bills sponsored</h3>
+<% @member.bills.each do |bill| %>
+  <h4><%= bill.bill_number %>: <%= bill.title_long ? bill.title_long : bill.title_short %></h4>
+  <p>Introduced <%= bill.date_introduced.to_formatted_s(:long) %></p>
+  <% if bill.summary %>
+    <p><%= bill.summary %></p>
+  <% end %>
+<% end %>
+<h3>Votes</h3>
 <table>
   <tbody>
     <tr>
