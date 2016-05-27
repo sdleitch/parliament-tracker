@@ -27,7 +27,7 @@ class VoteTally < ActiveRecord::Base
     votes_xml = open(vote_page_uri.to_s + "&xml=True").read
     votes_hash = Hash.from_xml(votes_xml)["Vote"]["Participant"]
     new_tally.get_votes(votes_hash) if new_tally.votes.length != votes_hash.length
-    new_tally.agreed_to? = new_tally.tally_votes
+    new_tally.agreed_to = new_tally.tally_votes if new_tally.agreed_to == nil
     new_tally.save!
     return new_tally
   end
