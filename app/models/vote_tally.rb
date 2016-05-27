@@ -35,7 +35,7 @@ class VoteTally < ActiveRecord::Base
   def get_votes(votes_hash)
     votes_hash.each do |vote|
       member = Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"])
-      if (!member) || ((self.votes & member.votes).empty?)
+      if (!member) || ((votes & member.votes).empty?)
         new_vote = Vote.new
         new_vote.member = member if member
         new_vote.vote_decision = vote["RecordedVote"]["Yea"] == "1" ? true : false
