@@ -13,87 +13,91 @@ class Member < ActiveRecord::Base
   has_attached_file :headshot
   validates_attachment_content_type :headshot, :content_type => /\Aimage\/.*\Z/
 
-  def self.scrape_members
-    @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
-    @@members = Hash.from_xml(@@members_xml)['List']['MemberOfParliament']
-  end
+  ### START OF CLASS METHODS ###
+  class << self
 
-  # pass true to turn on honorific
-  def fullname(honorific=false)
-    if (honorific == true) && (self.honorific != nil)
-      return "The #{self.honorific} #{self.firstname} #{self.lastname}"
-    else
-      return "#{self.firstname} #{self.lastname}"
+    # Download members xml, convert to Hash
+    def scrape_members
+      @@members_xml = open('http://www.parl.gc.ca/Parliamentarians/en/members/export?output=XML').read
+      members_hash = Hash.from_xml(@@members_xml)['List']['MemberOfParliament']
+      return members_hash
     end
-  end
 
-  def test_async
-    puts self.fullname + "\n--------------\n"
-    p self
-  end
-  handle_asynchronously :test_async, run_at: 10.seconds.from_now
+    # Update all members at once. Right now is not used anywhere.
+    def create_members
+      members_hash = scrape_members
 
-  # Update all members at once. Right now is not used anywhere.
-  def self.create_members(members=@@members)
-    members.each do |member|
-      Member.update_or_create_member(
-        member["PersonOfficialFirstName"],
-        member["PersonOfficialLastName"],
-        member["PersonShortHonorific"],
-        member["CaucusShortName"]
+      members_hash.each do |member|
+        update_or_create_member(
+          member["PersonOfficialFirstName"],
+          member["PersonOfficialLastName"],
+          member["PersonShortHonorific"],
+          member["CaucusShortName"]
+        )
+      end
+    end
+    handle_asynchronously :create_members
+
+    # Find MP, if doesn't exist build/scrape with various methods.
+    # Called when ElectoralDistrict is built.
+    # Also used by Member#get_all_members but that is not currently used.
+    def update_or_create_member(firstname, lastname, honorific, party_name)
+      member = Member.find_or_create_by(
+        firstname: firstname,
+        lastname: lastname,
       )
+      member.honorific = honorific
+      member.party = Party.find_or_create_by(name: party_name)
+      member.scrape_member_info
+      member.save!
+      return member
     end
+
   end
 
-  # Find MP, if doesn't exist build/scrape with various methods.
-  # Called when ElectoralDistrict is built.
-  # Also used by Member#get_all_members but that is not currently used.
-  def self.update_or_create_member(firstname, lastname, honorific, party_name)
-    member = Member.find_or_create_by(
-      firstname: firstname,
-      lastname: lastname,
-    )
-    member.honorific = honorific
-    member.party = Party.find_or_create_by(name: party_name)
-    member.scrape_member_info
-    member.save!
-    return member
-  end
+  ### END OF CLASS METHODS###
+  ### START OF INSTANCE METHODS ###
 
   # Method to scrape MP headshots and emails from www.parl.gc.ca in single method
   def scrape_member_info
-    if (self.headshot_file_name == nil) || (self.email == nil)
+    if (headshot_file_name == nil) || (email == nil)
 
       base_uri = URI("http://www.parl.gc.ca/Parliamentarians/en/members/")
-      uri_safe_string = I18n.transliterate("#{self.firstname}-#{self.lastname}".delete(" .'"))
+      uri_safe_string = I18n.transliterate("#{firstname}-#{lastname}".delete(" .'"))
       bio = Nokogiri::HTML(open(base_uri + uri_safe_string))
 
       # scrape headshot
-      if self.headshot_file_name == nil
+      if headshot_file_name == nil
         headshot_url = URI.escape(bio.css('div.profile img.picture')[0].attr('src'))
-        self.headshot_remote_url(headshot_url)
+        headshot_remote_url(headshot_url)
       end
 
       # scrape email
-      if self.email == nil
-        self.scrape_email(bio)
+      if email == nil
+        scrape_email(bio)
       end
 
     end
   end
+  handle_asynchronously :scrape_member_info
 
   # get MP email from www.parl.gc.ca
   def scrape_email(bio)
     attributes = bio.css('.profile.overview.header a')
     attributes.each do |attribute|
-      self.email = attribute.content.downcase if /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.ca\z/ =~ attribute.content
+      email = attribute.content.downcase if /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.ca\z/ =~ attribute.content
     end
   end
 
   # get MP headshot
   def headshot_remote_url(url_value)
-    self.headshot = URI.parse(url_value)
+    headshot = URI.parse(url_value)
     @headshot_remote_url = url_value
+  end
+
+  # pass true to turn on honorific
+  def fullname
+    return "#{firstname} #{lastname}"
   end
 
   # Possible vote % in previous election
