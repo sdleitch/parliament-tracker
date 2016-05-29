@@ -25,21 +25,21 @@ class VoteTally < ActiveRecord::Base
     end
 
     votes_xml = open(vote_page_uri.to_s + "&xml=True").read
-    votes = Hash.from_xml(votes_xml)["Vote"]["Participant"]
-    new_tally.get_votes(votes)
-    new_tally.agreed_to = new_tally.tally_votes
+    votes_hash = Hash.from_xml(votes_xml)["Vote"]["Participant"]
+    new_tally.get_votes(votes_hash) if new_tally.votes.length != votes_hash.length
+    new_tally.agreed_to = new_tally.tally_votes if new_tally.agreed_to == nil
     new_tally.save!
     return new_tally
   end
 
-  def get_votes(votes)
-    votes.each do |vote|
+  def get_votes(votes_hash)
+    votes_hash.each do |vote|
       member = Member.find_by(firstname: vote["FirstName"], lastname: vote["LastName"])
-      if (!member) || ((self.votes & member.votes).empty?)
+      if (!member) || ((votes & member.votes).empty?)
         new_vote = Vote.new
         new_vote.member = member if member
         new_vote.vote_decision = vote["RecordedVote"]["Yea"] == "1" ? true : false
-        self.votes << new_vote
+        votes << new_vote
       end
     end
   end
@@ -60,18 +60,18 @@ class VoteTally < ActiveRecord::Base
   end
 
   def tally_votes
-    return self.yeas > self.nays ? true : false
+    return yeas > nays ? true : false
   end
 
   def yeas
     count = 0
-    self.votes.each { |vote| count += 1 if vote.vote_decision == true }
+    votes.each { |vote| count += 1 if vote.vote_decision == true }
     return count
   end
 
   def nays
     count = 0
-    self.votes.each { |vote| count += 1 if vote.vote_decision == false }
+    votes.each { |vote| count += 1 if vote.vote_decision == false }
     return count
   end
 

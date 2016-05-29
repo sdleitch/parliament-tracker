@@ -1,4 +1,4 @@
-<h1><%= @member.fullname(true) %></h1>
+<h1><%= @member.fullname %></h1>
 <%= image_tag @member.headshot.url %><br>
 <h3>
   Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
