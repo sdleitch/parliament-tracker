@@ -17,7 +17,6 @@ class ElectoralDistrict < ActiveRecord::Base
       new_district.geo = new_district.get_geography(districts_geojson) if new_district.geo == nil || new_district.geo == "null"
 
       if new_district.member == nil || new_district.member.lastname != district["CurrentPersonOfficialLastName"]
-        # Find or create Member and associate, unless nil (vacant)
         unless district["CurrentPersonOfficialLastName"] == nil
           new_district.member =  Member.update_or_create_member(
             district["CurrentPersonOfficialFirstName"],
