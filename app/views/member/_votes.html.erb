@@ -1,0 +1,24 @@
+<div class="member-votes">
+  <h3>Votes</h3>
+  <table class="member-votes-table">
+    <tbody>
+      <tr class="votes-table-headings">
+        <th>Bill</th><th>Date</th><th>Position</th><th>Vote result</th>
+      </tr>
+      <% sort_votes_by_date(5).each do |vote| %>
+      <tr>
+        <th><%=  vote.bill.bill_number %></th>
+      </tr>
+      <tr>
+        <th><%=  vote.vote_tally.date %></th>
+      </tr>
+      <tr>
+        <th><%=  vote.vote_decision == true ? "Yea" : "Nay" %></th>
+      </tr>
+      <tr>
+        <th><%=  vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived" %></th>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
