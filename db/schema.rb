@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526061148) do
+ActiveRecord::Schema.define(version: 20160530022409) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20160526061148) do
     t.integer  "parliament_number"
     t.integer  "member_id"
     t.text     "summary"
+    t.string   "last_event"
+    t.date     "last_event_date"
   end
 
   add_index "bills", ["member_id"], name: "index_bills_on_member_id"

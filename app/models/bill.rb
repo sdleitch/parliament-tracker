@@ -1,4 +1,6 @@
 class Bill < ActiveRecord::Base
+  include ActiveModel::Dirty
+
   belongs_to :member
   has_many :vote_tallies, dependent: :destroy
 
@@ -17,23 +19,7 @@ class Bill < ActiveRecord::Base
 
       bills_hash.each do |bill|
         new_bill = Bill.find_or_create_by(parliament_number: bill["id"])
-
-        new_bill.prefix = bill["BillNumber"]["prefix"] if new_bill.prefix == nil
-        new_bill.number = bill["BillNumber"]["number"] if new_bill.number == nil
-        new_bill.date_introduced = bill["BillIntroducedDate"].to_date if new_bill.date_introduced == nil
-        new_bill.bill_type = bill["BillType"]["Title"][0] if new_bill.bill_type == nil
-        new_bill.title_long = bill["BillTitle"]["Title"][0] if new_bill.title_long == nil
-        if (new_bill.title_short == nil) && (bill["ShortTitle"]["Title"][0].class == String)
-          new_bill.title_short = bill["ShortTitle"]["Title"][0]
-        end
-
-        new_bill.member = Member.find_by(
-          firstname: bill["SponsorAffiliation"]["Person"]["FirstName"],
-          lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
-        ) if new_bill.member == nil
-
-        new_bill.get_vote_tallies
-        new_bill.save!
+        new_bill.update_or_create_bill(bill)
       end
 
     end
@@ -43,6 +29,29 @@ class Bill < ActiveRecord::Base
 
   ### END OF CLASS METHODS###
   ### START OF INSTANCE METHODS ###
+
+  def update_or_create_bill(bill)
+    self.prefix = bill["BillNumber"]["prefix"] if self.prefix == nil
+    self.number = bill["BillNumber"]["number"] if self.number == nil
+    self.date_introduced = bill["BillIntroducedDate"].to_date if self.date_introduced == nil
+    self.bill_type = bill["BillType"]["Title"][0] if self.bill_type == nil
+    self.title_long = bill["BillTitle"]["Title"][0] if self.title_long == nil
+    if (self.title_short == nil) && (bill["ShortTitle"]["Title"][0].class == String)
+      self.title_short = bill["ShortTitle"]["Title"][0]
+    end
+    self.last_event = bill["Events"]["LastMajorStageEvent"]["Event"]["Status"]["Title"][0]
+    self.last_event_date = bill["Events"]["LastMajorStageEvent"]["Event"]["date"].to_date
+
+    self.member = Member.find_by(
+      firstname: bill["SponsorAffiliation"]["Person"]["FirstName"],
+      lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
+    ) if self.member == nil
+
+    if changed?
+      get_vote_tallies
+    end
+    save!
+  end
 
   def get_vote_tallies
     base_uri = "http://www.parl.gc.ca"
