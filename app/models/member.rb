@@ -40,7 +40,6 @@ class Member < ActiveRecord::Base
 
     # Find MP, if doesn't exist build/scrape with various methods.
     # Called when ElectoralDistrict is built.
-    # Also used by Member#get_all_members but that is not currently used.
     def update_or_create_member(firstname, lastname, honorific, party_name)
       member = Member.find_or_create_by(
         firstname: firstname,
