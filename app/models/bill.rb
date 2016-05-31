@@ -49,8 +49,8 @@ class Bill < ActiveRecord::Base
 
     if changed?
       get_vote_tallies
+      save!
     end
-    save!
   end
 
   def get_vote_tallies
