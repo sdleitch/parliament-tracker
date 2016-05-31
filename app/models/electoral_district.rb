@@ -25,15 +25,13 @@ class ElectoralDistrict < ActiveRecord::Base
         # Find or create Member and associate, unless nil (vacant)
         ## This needs to be updated to NOT RUN EVERY NIGHT, but
                           ## still run IF THERE IS A NEW MEMBER
-        if new_district.member == nil || new_district.member.lastname != district["CurrentPersonOfficialLastName"]
-          unless district["CurrentPersonOfficialLastName"] == nil
-            new_district.member =  Member.update_or_create_member(
-              district["CurrentPersonOfficialFirstName"],
-              district["CurrentPersonOfficialLastName"],
-              district["CurrentPersonShortHonorific"],
-              district["CurrentCaucusShortName"]
-            )
-          end
+        if district["CurrentPersonOfficialLastName"] == nil
+          new_district.member = nil
+        elsif (new_district.member == nil) || (new_district.member.lastname != district["CurrentPersonOfficialLastName"])
+          new_district.member = Member.find_by(
+            firstname: district["CurrentPersonOfficialFirstName"],
+            lastname: district["CurrentPersonOfficialLastName"]
+          )
         end
 
         new_district.save!

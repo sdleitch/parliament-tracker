@@ -1,4 +1,6 @@
 class Member < ActiveRecord::Base
+  include ActiveModel::Dirty
+
   belongs_to :party
   belongs_to :electoral_district
   has_many :bills
@@ -28,34 +30,30 @@ class Member < ActiveRecord::Base
       members_hash = scrape_members
 
       members_hash.each do |member|
-        update_or_create_member(
-          member["PersonOfficialFirstName"],
-          member["PersonOfficialLastName"],
+        new_member = Member.find_or_create_by(
+          firstname: member["PersonOfficialFirstName"],
+          lastname: member["PersonOfficialLastName"]
+        )
+        new_member.update_member(
           member["PersonShortHonorific"],
           member["CaucusShortName"]
         )
       end
     end
     handle_asynchronously :create_members
-
-    # Find MP, if doesn't exist build/scrape with various methods.
-    # Called when ElectoralDistrict is built.
-    def update_or_create_member(firstname, lastname, honorific, party_name)
-      member = Member.find_or_create_by(
-        firstname: firstname,
-        lastname: lastname,
-      )
-      member.honorific = honorific
-      member.party = Party.find_or_create_by(name: party_name)
-      member.scrape_member_info
-      member.save!
-      return member
-    end
-
   end
 
   ### END OF CLASS METHODS###
   ### START OF INSTANCE METHODS ###
+
+  # Find MP, if doesn't exist build/scrape with various methods.
+  # Called when ElectoralDistrict is built.
+  def update_member(honorific, party_name)
+    self.honorific = honorific
+    party = Party.find_or_create_by(name: party_name) if self.party.name != party_name
+    scrape_member_info
+    save! if changed?
+  end
 
   # Method to scrape MP headshots and emails from www.parl.gc.ca in single method
   def scrape_member_info
@@ -75,16 +73,15 @@ class Member < ActiveRecord::Base
       if email == nil
         scrape_email(bio)
       end
-
+      save!
     end
   end
-  handle_asynchronously :scrape_member_info
 
   # get MP email from www.parl.gc.ca
   def scrape_email(bio)
     attributes = bio.css('.profile.overview.header a')
     attributes.each do |attribute|
-      email = attribute.content.downcase if /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.ca\z/ =~ attribute.content
+      self.email = attribute.content.downcase if /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.ca\z/ =~ attribute.content
     end
   end
 
