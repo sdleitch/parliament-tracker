@@ -19,6 +19,9 @@
 # Ignore migrations
 /db/migrate/*
 
+# Ignore local ENV variables
+/config/local_env.yml
+
 # Ignore headshot files
 /public/system/members/*
 
