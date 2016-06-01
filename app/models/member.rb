@@ -91,7 +91,6 @@ class Member < ActiveRecord::Base
     @headshot_remote_url = url_value
   end
 
-  # pass true to turn on honorific
   def fullname
     return "#{firstname} #{lastname}"
   end
