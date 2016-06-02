@@ -15,16 +15,4 @@
     <p><%= bill.summary %></p>
   <% end %>
 <% end %>
-<h3>Votes</h3>
-<table>
-  <tbody>
-    <tr>
-      <th>Name</th><th>Date</th><th>Position</th><th>Vote result</th>
-    </tr>
-    <% sort_votes_by_date.each do |vote| %>
-    <tr>
-      <th><%=  vote.vote_decision == true ? "Yea" : "Nay" %></th>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render 'votes' %>

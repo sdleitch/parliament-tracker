@@ -3,20 +3,14 @@
   <table class="member-votes-table">
     <tbody>
       <tr class="votes-table-headings">
-        <th>Bill</th><th>Date</th><th>Position</th><th>Vote result</th>
+        <th>Bill</th><th>Position</th><th>Vote result</th><th>Vote Date</th>
       </tr>
       <% sort_votes_by_date(5).each do |vote| %>
       <tr>
-        <th><%=  vote.bill.bill_number %></th>
-      </tr>
-      <tr>
-        <th><%=  vote.vote_tally.date %></th>
-      </tr>
-      <tr>
-        <th><%=  vote.vote_decision == true ? "Yea" : "Nay" %></th>
-      </tr>
-      <tr>
-        <th><%=  vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived" %></th>
+        <td><%= link_to vote.vote_tally.bill.bill_number, vote.vote_tally.bill %></td>
+        <%= content_tag :td, vote.vote_decision == true ? "Yea" : "Nay", class: vote.vote_decision %>
+        <%= content_tag :td, vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived", class: vote.vote_tally.agreed_to? %>
+        <td><%=  vote.vote_tally.date %></td>
       </tr>
       <% end %>
     </tbody>
