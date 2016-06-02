@@ -1,3 +1,4 @@
 <%= content_tag :p, link_to(@vote_tally.bill.bill_number, @vote_tally.bill) %>
 <%= content_tag :p, @vote_tally.date %>
 <%= content_tag :p, @vote_tally.para %>
+<%= content_tag :p, @vote_tally.member.fullname %>
