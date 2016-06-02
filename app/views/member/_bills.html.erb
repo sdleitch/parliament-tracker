@@ -1,0 +1,10 @@
+<div class="member-bills">
+  <h3>Bills sponsored</h3>
+  <% @member.bills.each do |bill| %>
+  <h4><%= link_to(bill.bill_number, bill) %>: <%= bill.title_long ? bill.title_long : bill.title_short %></h4>
+  <p>Introduced <%= bill.date_introduced.to_formatted_s(:long) %></p>
+  <% if bill.summary %>
+  <p><%= bill.summary %></p>
+  <% end %>
+  <% end %>
+</div>

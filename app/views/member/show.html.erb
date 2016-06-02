@@ -4,14 +4,7 @@
   Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
 </h3>
 <p>Email: <%= link_to @member.email, "mailto:#{@member.email}" %></p>
-<%= content_tag :div, id: "map", style: "height: 400px", data: { geo: @member.electoral_district.geo } do %>
+<%= content_tag :div, id: "map", data: { geo: @member.electoral_district.geo } do %>
 <% end %>
-<h3>Bills sponsored</h3>
-<% @member.bills.each do |bill| %>
-  <h4><%= bill.bill_number %>: <%= bill.title_long ? bill.title_long : bill.title_short %></h4>
-  <p>Introduced <%= bill.date_introduced.to_formatted_s(:long) %></p>
-  <% if bill.summary %>
-    <p><%= bill.summary %></p>
-  <% end %>
-<% end %>
-<%= render 'votes' %>
+<%= render "bills" %>
+<%= render "votes" %>
