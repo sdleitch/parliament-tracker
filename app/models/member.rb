@@ -50,7 +50,7 @@ class Member < ActiveRecord::Base
   # Called when ElectoralDistrict is built.
   def update_member(honorific, party_name)
     self.honorific = honorific
-    party = Party.find_or_create_by(name: party_name) if self.party.name != party_name
+    self.party = Party.find_or_create_by(name: party_name) if self.party.name != party_name
     scrape_member_info
     save! if changed?
   end
@@ -64,9 +64,9 @@ class Member < ActiveRecord::Base
       bio = Nokogiri::HTML(open(base_uri + uri_safe_string))
 
       # scrape headshot
-      if headshot_file_name == nil
+      if self.headshot_file_name == nil
         headshot_url = URI.escape(bio.css('div.profile img.picture')[0].attr('src'))
-        headshot_remote_url(headshot_url)
+        self.headshot_remote_url(headshot_url)
       end
 
       # scrape email
@@ -87,7 +87,7 @@ class Member < ActiveRecord::Base
 
   # get MP headshot
   def headshot_remote_url(url_value)
-    headshot = URI.parse(url_value)
+    self.headshot = URI.parse(url_value)
     @headshot_remote_url = url_value
   end
 

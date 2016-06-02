@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'nokogiri'
 gem 'paperclip'
 gem 'delayed_job_active_record'
+gem 'aws-sdk', '< 2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'

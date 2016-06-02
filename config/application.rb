@@ -25,8 +25,24 @@ module ParliamentTracker
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    env_file = File.join(Rails.root, 'config', 'local_env.yml')
+    YAML.load(File.open(env_file)).each do |key, value|
+      ENV[key.to_s] = value
+    end
+
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :delayed_job
+
+    config.paperclip_defaults = {
+      storage: :s3,
+      url: ':s3_domain_url',
+      path: '/:class/:attachment/:id_partition/:style/:filename',
+      s3_credentials: {
+        access_key_id: ENV["S3_KEY_ID"],
+        secret_access_key: ENV["S3_ACCESS_KEY"],
+        bucket: "parliament-tracker-storage"
+      }
+    }
   end
 end

@@ -26,3 +26,6 @@
 /public/system/members/*
 
 /public/assets/*
+
+/config/local_env.yml
+/config/secrets.yml
