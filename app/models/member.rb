@@ -50,7 +50,7 @@ class Member < ActiveRecord::Base
   # Called when ElectoralDistrict is built.
   def update_member(honorific, party_name)
     self.honorific = honorific
-    party = Party.find_or_create_by(name: party_name) if self.party.name != party_name
+    self.party = Party.find_or_create_by(name: party_name) if self.party.name != party_name
     scrape_member_info
     save! if changed?
   end
