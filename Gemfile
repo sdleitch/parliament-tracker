@@ -4,6 +4,7 @@ gem 'nokogiri'
 gem 'paperclip'
 gem 'delayed_job_active_record'
 gem 'aws-sdk', '< 2.0'
+gem 'bootstrap-sass'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'

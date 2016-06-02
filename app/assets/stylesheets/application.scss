@@ -14,27 +14,34 @@
  *= require_self
  */
 
- table, th, td {
+@import 'bootstrap-sprockets';
+@import 'bootstrap';
 
-   border-bottom: 1px solid black;
-   border-collapse: collapse;
-   text-align: center;
-   padding: 5px;
+body {
+  padding: 10px;
+}
 
-   tr {
-     &:hover {
-       background-color: #f5f5f5;
-     }
-   }
+table, th, td {
 
-   td {
+  border-bottom: 1px solid black;
+  border-collapse: collapse;
+  text-align: center;
+  padding: 5px;
 
-     &.false {
-       background-color: rgba(255, 0, 0, 0.5);
-     }
+  tr {
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
 
-     &.true {
-       background-color: rgba(0, 255, 0, 0.5);
-     }
-   }
- }
+  td {
+
+    &.false {
+      background-color: rgba(255, 0, 0, 0.5);
+    }
+
+    &.true {
+      background-color: rgba(0, 255, 0, 0.5);
+    }
+  }
+}

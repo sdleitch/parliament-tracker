@@ -9,7 +9,7 @@
       <tr>
         <td><%= link_to vote.vote_tally.bill.bill_number, vote.vote_tally.bill %></td>
         <%= content_tag :td, vote.vote_decision == true ? "Yea" : "Nay", class: vote.vote_decision %>
-        <%= content_tag :td, vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived", class: vote.vote_tally.agreed_to? %>
+        <td><%= link_to vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived", vote.vote_tally %></td>
         <td><%=  vote.vote_tally.date %></td>
       </tr>
       <% end %>
