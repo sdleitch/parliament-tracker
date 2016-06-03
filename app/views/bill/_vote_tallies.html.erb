@@ -1,0 +1,17 @@
+<div class="bill-votes">
+  <h3>Votes</h3>
+  <table class="bill-vote-tallies-table">
+    <tbody>
+      <tr class="bill-vote-tallies-headings">
+      <th>Vote Date</th><th>Vote result</th><th>Desc.</th>
+      </tr>
+      <% sort_votes_tallies_by_date.each do |vote_tally| %>
+      <tr>
+        <%= content_tag :td, vote_tally.date.strftime("%b %d, %Y") %>
+        <%= content_tag :td, link_to(vote_tally.agreed_to? == true ? "Passed" : "Negatived", vote_tally), class: vote_tally.agreed_to? %>
+        <%= content_tag :td, link_to(vote_tally.para.truncate(300), vote_tally), class: "vote-tally-desc" %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

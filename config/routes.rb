@@ -5,6 +5,8 @@ Rails.application.routes.draw do
             :bill,
             :vote_tally
 
+  get 'member/:id/votes' => 'votes#show'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

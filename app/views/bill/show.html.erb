@@ -1,7 +1,4 @@
 <h4><%= @bill.bill_number %>: <%= @bill.title_long ? @bill.title_long : @bill.title_short %></h4>
 <p>Introduced <%= @bill.date_introduced.to_formatted_s(:long) %></p>
 <p>Sponsored by <%= link_to @bill.member.fullname, @bill.member %></p>
-<% @bill.vote_tallies.each do |tally| %>
-  <%= tally.date.strftime("%b %d, %Y") %>
-  <%= tally.agreed_to == true ? "Agreed To" : "Negatived" %>
-<% end %>
+<%= render 'vote_tallies' %>
