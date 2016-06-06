@@ -39,6 +39,7 @@ class VoteTally < ActiveRecord::Base
         new_vote = Vote.new
         new_vote.member = member if member
         new_vote.vote_decision = vote["RecordedVote"]["Yea"] == "1" ? true : false
+        new_vote.save!
         votes << new_vote
       end
     end

@@ -1,4 +1,9 @@
 <h4><%= @bill.bill_number %>: <%= @bill.title_long ? @bill.title_long : @bill.title_short %></h4>
 <p>Introduced <%= @bill.date_introduced.to_formatted_s(:long) %></p>
 <p>Sponsored by <%= link_to @bill.member.fullname, @bill.member %></p>
+<% if @bill.last_event == "Royal Assent" %>
+  <%= content_tag :p, "This bill reached Royal Assent on #{@bill.last_event_date.strftime("%b %d, %Y")}, and is now law." %>
+<% else %>
+  <%= content_tag :p, "Last completed stage: #{@bill.last_event} (#{@bill.last_event_date})" %>
+<% end %>
 <%= render 'vote_tallies' %>

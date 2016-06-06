@@ -9,7 +9,7 @@
       <tr>
         <%= content_tag :td, vote_tally.date.strftime("%b %d, %Y") %>
         <%= content_tag :td, link_to(vote_tally.agreed_to? == true ? "Passed" : "Negatived", vote_tally), class: vote_tally.agreed_to? %>
-        <%= content_tag :td, link_to(vote_tally.para.truncate(300), vote_tally), class: "vote-tally-desc" %>
+        <%= content_tag :td, link_to(vote_tally.para ? vote_tally.para.truncate(300) : "", vote_tally), class: "vote-tally-desc" %>
       </tr>
       <% end %>
     </tbody>

@@ -1,3 +1,2 @@
-<% @votes.each do |vote| %>
-  <%= content_tag :p, vote.vote_decision %>
-<% end %>
+<%= content_tag :h1, "#{@member.fullname}'s voting history" %>
+<%= render 'member/votes', locals: { limit: nil }%>

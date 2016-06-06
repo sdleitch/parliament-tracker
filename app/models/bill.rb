@@ -47,8 +47,8 @@ class Bill < ActiveRecord::Base
       lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
     ) if self.member == nil
 
+    get_vote_tallies
     if changed?
-      get_vote_tallies
       save!
     end
   end
@@ -59,10 +59,10 @@ class Bill < ActiveRecord::Base
     votes_page = Nokogiri::HTML(open(votes_uri))
     vote_links = votes_page.css(".VoteLink").select { |vote| vote.attr('href') }
 
-    if vote_links.length > vote_tallies.length
+    if vote_links.length > self.vote_tallies.length
       vote_links.each do |vote_link|
         new_tally = VoteTally.create_vote_tally(base_uri + vote_link.attr('href'))
-        vote_tallies << new_tally
+        self.vote_tallies << new_tally
       end
     end
   end

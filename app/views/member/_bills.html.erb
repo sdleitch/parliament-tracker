@@ -3,10 +3,10 @@
   <% if @member.bills.length == 0 %>
     <%= content_tag :p, "#{@member.fullname} has not sponsored any bills during Canada's 42d Parliament", class: "no-bill" %>
   <% else  %>
-    <% @member.bills.each do |bill| %>
+    <% sort_bills_by_date.each do |bill| %>
       <div class="member-bill">
         <%= content_tag :h4, link_to("#{bill.bill_number}: #{bill.title_long ? bill.title_long : bill.title_short}", bill) %>
-        <%= content_tag :p, "Last event: #{bill.last_event} on #{bill.last_event_date.to_formatted_s(:long)}", class: "member-bill-last-event" %>
+        <%= content_tag :p, "Last event: #{bill.last_event} (#{bill.last_event_date.strftime("%b %d, %Y")})", class: "member-bill-last-event" %>
         <%= content_tag :p, bill.summary, class: "member-bill-summary" %>
       </div>
     <% end %>

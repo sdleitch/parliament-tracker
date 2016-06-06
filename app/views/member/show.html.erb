@@ -7,5 +7,4 @@
 <%= content_tag :div, id: "map", data: { geo: @member.electoral_district.geo } do %>
 <% end %>
 <%= render "bills" %>
-<%= render "votes" %>
-<%= content_tag :p, link_to("See all of #{@member.fullname}'s votes", "#{@member.id}/votes") %>
+<%= render "votes", locals: { limit: 5 } %>
