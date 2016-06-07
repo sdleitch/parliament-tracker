@@ -25,11 +25,6 @@ module ParliamentTracker
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    env_file = File.join(Rails.root, 'config', 'local_env.yml')
-    YAML.load(File.open(env_file)).each do |key, value|
-      ENV[key.to_s] = value
-    end
-
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.active_job.queue_adapter = :delayed_job
