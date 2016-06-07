@@ -2,6 +2,6 @@
 # and it will initialize a scrape of the Parliament website, etc.
 # It is recurive and will schedule another scrape for the next day.
 
-# require File.join(Rails.root, "lib", "parliament_scraper.rb")
+require File.join(Rails.root, "lib", "parliament_scraper.rb")
 
-# ParliamentScraper.scrape if Delayed::Job.count < 1
+ParliamentScraper.scrape if Delayed::Job.count < 1
