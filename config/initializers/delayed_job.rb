@@ -4,4 +4,4 @@
 
 require File.join(Rails.root, "lib", "parliament_scraper.rb")
 
-ParliamentScraper.scrape if Delayed::Job.count < 1
+# ParliamentScraper.scrape if Delayed::Job.count < 1
