@@ -1,0 +1,12 @@
+<%= content_tag :h4, "Bills" %>
+<ul>
+  <% @bills.each do |bill| %>
+  <li>
+    <% if bill.last_event == "Introduction and First Reading" %>
+      Bill <%= link_to(bill.bill_number, bill) %> was introduced by <%= link_to(bill.member.fullname, bill.member) %> on <%= bill.last_event_date.strftime("%b %d, %Y") %>.
+    <% else %>
+      Bill <%= link_to(bill.bill_number, bill) %> reached <%= bill.last_event %> on <%= bill.last_event_date.strftime("%b %d, %Y") %>.
+    <% end %>
+  </li>
+  <% end %>
+</ul>
