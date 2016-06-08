@@ -5,7 +5,7 @@ module MemberHelper
   end
 
   def name_with_honorific
-    @member.honorific ? "#{@member.honorific} #{@member.fullname}" : @member.fullname
+    @member.honorific ? "The #{@member.honorific} #{@member.fullname}" : @member.fullname
   end
 
   def sort_bills_by_date(limit=nil)
