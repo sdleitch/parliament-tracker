@@ -1,11 +1,23 @@
 Rails.application.routes.draw do
 
-  resources :member,
-            :party,
-            :bill,
-            :vote_tally
+  root 'application#index'
 
+  get 'member' => 'member#index', as: 'member_index'
+  get 'member/:id' => 'member#show', as: 'member'
   get 'member/:id/votes' => 'votes#show'
+
+  # get 'party' => 'party#index'
+  get 'party/:id' => 'party#show', as: 'party'
+
+  get 'bill/:id' => 'bill#show', as: 'bill'
+
+  get 'vote-tally/:id' => 'vote_tally#show', as: 'vote_tally'
+
+  # resources :member,
+  #           :party,
+  #           :bill,
+  #           :vote_tally
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
