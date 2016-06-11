@@ -1,4 +1,4 @@
-<%= content_tag :h1, name_with_honorific %>
+<%= content_tag :h1, name_with_honorific, class: "member" %>
 <%= image_tag @member.headshot.url %><br>
 <h3>
   Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
