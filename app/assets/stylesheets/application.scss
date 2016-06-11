@@ -21,6 +21,11 @@ body {
   padding: 10px;
 }
 
+.content-wrapper {
+  max-width: 720px;
+  margin: 0px auto;
+}
+
 table, th, td {
 
   border-bottom: 1px solid black;

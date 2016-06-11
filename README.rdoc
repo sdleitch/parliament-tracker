@@ -1,7 +1,0 @@
-== Canadian Parliament tracker
-
-A personal project to scrape data and track data from the Canadian Parliament.
-
-Will scrape and update each night with votes on bills, new bills, MPs, etc.
-
-It is not ready.
