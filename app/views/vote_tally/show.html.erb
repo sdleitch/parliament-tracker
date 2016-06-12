@@ -1,6 +1,6 @@
 <%= content_tag :h4, link_to("#{@vote_tally.bill.bill_number}: #{@vote_tally.bill.title_long}", @vote_tally.bill) %>
 <%= content_tag :p, @vote_tally.bill.summary %>
-<%= content_tag :p, "The vote #{@vote_tally.agreed_to ? "passed" : "failed"} with #{@vote_tally.yeas} votes for and #{@vote_tally.nays} against." %>
+<%= content_tag :p, "The vote #{result(@vote_tally)} with #{@vote_tally.yeas} votes for and #{@vote_tally.nays} against." %>
 <%= content_tag :p, @vote_tally.date %>
 <%= content_tag :p, @vote_tally.para %>
 <% if @vote_tally.member %>

@@ -9,11 +9,10 @@
       <tr>
         <%= content_tag :td, link_to(vote.vote_tally.bill.bill_number, vote.vote_tally.bill) %>
         <%= content_tag :td, vote.vote_decision == true ? "Yea" : "Nay", class: vote.vote_decision %>
-        <%= content_tag :td, link_to(vote.vote_tally.agreed_to? == true ? "Passed" : "Negatived", vote.vote_tally), class: vote.vote_tally.agreed_to? %>
+        <%= content_tag :td, link_to(result(vote.vote_tally).titleize, vote.vote_tally), class: vote.vote_tally.agreed_to %>
         <%= content_tag :td, vote.vote_tally.date.strftime("%b %d, %Y") %>
       </tr>
       <% end %>
     </tbody>
   </table>
-  <%= content_tag :p, link_to("See all of #{@member.fullname}'s votes", "#{@member.id}/votes") %>
 </div>

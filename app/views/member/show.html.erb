@@ -8,3 +8,4 @@
 <% end %>
 <%= render "bills" %>
 <%= render "votes", locals: { limit: 5 } %>
+<%= content_tag :p, link_to("See all of #{@member.fullname}'s votes", "#{@member.id}/votes") %>

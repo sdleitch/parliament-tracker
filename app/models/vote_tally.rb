@@ -61,7 +61,11 @@ class VoteTally < ActiveRecord::Base
   end
 
   def tally_votes
-    return yeas > nays ? true : false
+    if yeas == nays
+      return nil
+    else
+      return yeas > nays ? true : false
+    end
   end
 
   def yeas
