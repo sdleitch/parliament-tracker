@@ -13,6 +13,7 @@ class ElectoralDistrict < ActiveRecord::Base
 
     def create_districts
       @@districts_geojson = File.read("public/districts.geojson")
+      @@features = parse_geojson
       districts_hash = scrape_districts
 
       districts_hash.each do |district|
@@ -20,7 +21,12 @@ class ElectoralDistrict < ActiveRecord::Base
           name: district["Name"],
           province: district["ProvinceTerritoryName"]
         )
-        new_district.geo = new_district.get_geography if new_district.geo == nil || new_district.geo == "null"
+        begin
+          new_district.geo = new_district.get_geography if new_district.geo == nil || new_district.geo == "null"
+          new_district.fednum = new_district.get_fednum if new_district.fednum == nil
+        rescue
+          nil
+        end
 
         # Find or create Member and associate, unless nil (vacant)
         ## This needs to be updated to NOT RUN EVERY NIGHT, but
@@ -39,26 +45,37 @@ class ElectoralDistrict < ActiveRecord::Base
     end
     handle_asynchronously :create_districts
 
+    def parse_geojson(geojson=@@districts_geojson)
+      # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
+      # to match ASCII-removed districts from GeoJSON to real district names
+      # This will return the first in a single-element array of hashes of GeoJSON
+      @@encoding_options = {
+        :invalid           => :replace,  # Replace invalid byte sequences
+        :undef             => :replace,  # Replace anything not defined in ASCII
+        :replace           => '',        # Use a blank for those replacements
+      }
+
+      geo = JSON.parse(geojson)
+      return geo["features"]
+    end
+
   end
 
   ### END OF CLASS METHODS###
   ### START OF INSTANCE METHODS ###
 
   # return GeoJSON string of ElectoralDistrict geometry
-  def get_geography(geojson=@@districts_geojson)
-    # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
-    # to match ASCII-removed districts from GeoJSON to real district names
-    encoding_options = {
-      :invalid           => :replace,  # Replace invalid byte sequences
-      :undef             => :replace,  # Replace anything not defined in ASCII
-      :replace           => '',        # Use a blank for those replacements
-    }
-
-    geo = JSON.parse(geojson)
-    features = geo["features"]
-    # This will return the first in a single-element array of hashes of GeoJSON
-    feature_geo = features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), encoding_options) }.first
+  def get_geography
+    feature_geo = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
     return feature_geo.to_json
+  end
+
+  def get_fednum
+    feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
+    puts feature
+    feature_fednum = feature["properties"]["FEDNUM"]
+    puts feature_fednum
+    return feature_fednum
   end
 
   # Possible vote % in previous election
