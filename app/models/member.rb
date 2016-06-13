@@ -25,7 +25,7 @@ class Member < ActiveRecord::Base
       return members_hash
     end
 
-    # Update all members at once. Right now is not used anywhere.
+    # Update all members at once.
     def create_members
       members_hash = scrape_members
 
@@ -36,6 +36,7 @@ class Member < ActiveRecord::Base
         )
         new_member.update_member(
           member["PersonShortHonorific"],
+          member["FromDateTime"],
           member["CaucusShortName"]
         )
       end
@@ -48,8 +49,9 @@ class Member < ActiveRecord::Base
 
   # Find MP, if doesn't exist build/scrape with various methods.
   # Called when ElectoralDistrict is built.
-  def update_member(honorific, party_name)
+  def update_member(honorific, date_elected, party_name)
     self.honorific = honorific
+    self.date_elected = date_elected.to_date
     self.party = Party.find_or_create_by(name: party_name)
     scrape_member_info
     save! if changed?

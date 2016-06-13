@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160612182353) do
+ActiveRecord::Schema.define(version: 20160613180358) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -70,6 +70,8 @@ ActiveRecord::Schema.define(version: 20160612182353) do
     t.string   "headshot_content_type"
     t.integer  "headshot_file_size"
     t.datetime "headshot_updated_at"
+    t.date     "date_elected"
+    t.decimal  "vote_percent"
   end
 
   add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"
