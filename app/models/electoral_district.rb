@@ -1,6 +1,15 @@
 class ElectoralDistrict < ActiveRecord::Base
   has_one :member
 
+  # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
+  # to match ASCII-removed districts from GeoJSON to real district names
+  # This will return the first in a single-element array of hashes of GeoJSON
+  @@encoding_options = {
+    :invalid           => :replace,  # Replace invalid byte sequences
+    :undef             => :replace,  # Replace anything not defined in ASCII
+    :replace           => '',        # Use a blank for those replacements
+  }
+  
   ### START OF CLASS METHODS ###
   class << self
 
@@ -46,14 +55,6 @@ class ElectoralDistrict < ActiveRecord::Base
     handle_asynchronously :create_districts
 
     def parse_geojson(geojson=@@districts_geojson)
-      # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
-      # to match ASCII-removed districts from GeoJSON to real district names
-      # This will return the first in a single-element array of hashes of GeoJSON
-      @@encoding_options = {
-        :invalid           => :replace,  # Replace invalid byte sequences
-        :undef             => :replace,  # Replace anything not defined in ASCII
-        :replace           => '',        # Use a blank for those replacements
-      }
 
       geo = JSON.parse(geojson)
       return geo["features"]
