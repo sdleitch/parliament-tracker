@@ -7,9 +7,12 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<%= javascript_include_tag 'leaflet' if @member %>
+<%= stylesheet_link_tag    'leaflet' if @member %>
 <div class="content-wrapper">
   <%= yield %>
 </div>
+
 <%= javascript_include_tag 'district-map' if @member %>
 </body>
 </html>
