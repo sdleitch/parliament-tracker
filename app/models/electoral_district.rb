@@ -1,4 +1,6 @@
 class ElectoralDistrict < ActiveRecord::Base
+  include ActiveModel::Dirty
+
   has_one :member
 
   # This taken from: stackoverflow.com/questions/1268289/how-to-get-rid-of-non-ascii-characters-in-ruby
@@ -9,7 +11,7 @@ class ElectoralDistrict < ActiveRecord::Base
     :undef             => :replace,  # Replace anything not defined in ASCII
     :replace           => '',        # Use a blank for those replacements
   }
-  
+
   ### START OF CLASS METHODS ###
   class << self
 
@@ -31,8 +33,9 @@ class ElectoralDistrict < ActiveRecord::Base
           province: district["ProvinceTerritoryName"]
         )
         begin
-          new_district.geo = new_district.get_geography if new_district.geo == nil || new_district.geo == "null"
-          new_district.fednum = new_district.get_fednum if new_district.fednum == nil
+          feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
+          new_district.geo = feature.to_json if new_district.geo == nil
+          new_district.fednum = feature["properties"]["FEDNUM"] if new_district.fednum == nil
         rescue
           nil
         end
@@ -49,7 +52,7 @@ class ElectoralDistrict < ActiveRecord::Base
           )
         end
 
-        new_district.save!
+        new_district.save! if new_district.changed?
       end
     end
     handle_asynchronously :create_districts
@@ -66,18 +69,16 @@ class ElectoralDistrict < ActiveRecord::Base
   ### START OF INSTANCE METHODS ###
 
   # return GeoJSON string of ElectoralDistrict geometry
-  def get_geography
-    feature_geo = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-    return feature_geo.to_json
-  end
-
-  def get_fednum
-    feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-    puts feature
-    feature_fednum = feature["properties"]["FEDNUM"]
-    puts feature_fednum
-    return feature_fednum
-  end
+  # def get_geography
+  #   feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
+  #   return feature.to_json
+  # end
+  #
+  # def get_fednum
+  #   feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
+  #   feature_fednum = feature["properties"]["FEDNUM"]
+  #   return feature_fednum
+  # end
 
   # Possible vote % in previous election
   # http://www.elections.ca/Scripts/vis/PastResults?L=e&ED=13002&EV=99&EV_TYPE=6&QID=-1&PAGEID=28
