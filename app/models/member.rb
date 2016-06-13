@@ -73,7 +73,7 @@ class Member < ActiveRecord::Base
       if email == nil
         scrape_email(bio)
       end
-      save!
+      save! if changed?
     end
   end
 

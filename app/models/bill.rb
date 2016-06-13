@@ -31,16 +31,16 @@ class Bill < ActiveRecord::Base
   ### START OF INSTANCE METHODS ###
 
   def update_or_create_bill(bill)
-    self.prefix = bill["BillNumber"]["prefix"] if self.prefix == nil
-    self.number = bill["BillNumber"]["number"] if self.number == nil
-    self.date_introduced = bill["BillIntroducedDate"].to_date if self.date_introduced == nil
-    self.bill_type = bill["BillType"]["Title"][0] if self.bill_type == nil
-    self.title_long = bill["BillTitle"]["Title"][0] if self.title_long == nil
-    if (self.title_short == nil) && (bill["ShortTitle"]["Title"][0].class == String)
-      self.title_short = bill["ShortTitle"]["Title"][0]
+    prefix = bill["BillNumber"]["prefix"] if prefix == nil
+    number = bill["BillNumber"]["number"] if number == nil
+    date_introduced = bill["BillIntroducedDate"].to_date if date_introduced == nil
+    bill_type = bill["BillType"]["Title"][0] if bill_type == nil
+    title_long = bill["BillTitle"]["Title"][0] if title_long == nil
+    if (title_short == nil) && (bill["ShortTitle"]["Title"][0].class == String)
+      title_short = bill["ShortTitle"]["Title"][0]
     end
-    self.last_event = bill["Events"]["LastMajorStageEvent"]["Event"]["Status"]["Title"][0]
-    self.last_event_date = bill["Events"]["LastMajorStageEvent"]["Event"]["date"].to_date
+    last_event = bill["Events"]["LastMajorStageEvent"]["Event"]["Status"]["Title"][0]
+    last_event_date = bill["Events"]["LastMajorStageEvent"]["Event"]["date"].to_date
 
     self.member = Member.find_by(
       firstname: bill["SponsorAffiliation"]["Person"]["FirstName"],
