@@ -37,6 +37,7 @@ class ElectoralDistrict < ActiveRecord::Base
           new_district.geo = feature.to_json if new_district.geo == nil
           new_district.fednum = feature["properties"]["FEDNUM"] if new_district.fednum == nil
         rescue
+          puts "Could not find FEDNUM for #{self.name}"
           nil
         end
 
@@ -68,17 +69,6 @@ class ElectoralDistrict < ActiveRecord::Base
   ### END OF CLASS METHODS###
   ### START OF INSTANCE METHODS ###
 
-  # return GeoJSON string of ElectoralDistrict geometry
-  # def get_geography
-  #   feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-  #   return feature.to_json
-  # end
-  #
-  # def get_fednum
-  #   feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-  #   feature_fednum = feature["properties"]["FEDNUM"]
-  #   return feature_fednum
-  # end
 
   # Possible vote % in previous election
   # http://www.elections.ca/Scripts/vis/PastResults?L=e&ED=13002&EV=99&EV_TYPE=6&QID=-1&PAGEID=28
