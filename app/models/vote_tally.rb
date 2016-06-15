@@ -20,7 +20,7 @@ class VoteTally < ActiveRecord::Base
       link_nodes = page.css("#VoteDetailsHeader > div:nth-child(2) a.WebOption")
       member_link_node = link_nodes.find { |node| node.attr('onclick') =~ /'Affiliation',\d{6},/ }
       redirect_id = member_link_node.attr('onclick').match(/\d{6}/).to_s
-      member_page_uri = "http://www.parl.gc.ca/parliamentarians/en/members/profileredirect?affiliationId=#{redirect_id}"
+      member_page_uri = BASE_PARLIAMENT_URI + "/parliamentarians/en/members/profileredirect?affiliationId=#{redirect_id}"
       new_tally.member = new_tally.get_vote_sponsor(member_page_uri)
     end
 

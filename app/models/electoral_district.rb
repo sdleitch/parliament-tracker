@@ -17,7 +17,7 @@ class ElectoralDistrict < ActiveRecord::Base
 
     # Download districts xml, convert to Hash
     def scrape_districts
-      @@districts_xml = open('http://www.parl.gc.ca/Parliamentarians/en/constituencies/export?output=XML').read
+      @@districts_xml = open(BASE_PARLIAMENT_URI + '/Parliamentarians/en/constituencies/export?output=XML').read
       districts_hash = Hash.from_xml(@@districts_xml)["List"]["Constituency"]
       return districts_hash
     end

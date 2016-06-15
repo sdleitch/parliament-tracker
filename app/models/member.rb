@@ -61,7 +61,7 @@ class Member < ActiveRecord::Base
   def scrape_member_info
     if (headshot_file_name == nil) || (email == nil)
 
-      base_uri = URI("http://www.parl.gc.ca/Parliamentarians/en/members/")
+      base_uri = URI(BASE_PARLIAMENT_URI + "/Parliamentarians/en/members/")
       uri_safe_string = I18n.transliterate("#{firstname}-#{lastname}".delete(" .'"))
       bio = Nokogiri::HTML(open(base_uri + uri_safe_string))
 
