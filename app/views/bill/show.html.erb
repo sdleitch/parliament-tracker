@@ -6,4 +6,5 @@
 <% else %>
   <%= content_tag :p, "Last completed stage: #{@bill.last_event} (#{@bill.last_event_date})" %>
 <% end %>
+<%= content_tag :p, @bill.summary %>
 <%= render 'vote_tallies' %>

@@ -7,7 +7,6 @@
       <div class="member-bill">
         <%= content_tag :h4, link_to("#{bill.bill_number}: #{bill.title_long ? bill.title_long : bill.title_short}", bill) %>
         <%= content_tag :p, "Last event: #{bill.last_event} (#{bill.last_event_date.strftime("%b %d, %Y")})", class: "member-bill-last-event" %>
-        <%= content_tag :p, bill.summary, class: "member-bill-summary" %>
       </div>
     <% end %>
   <% end %>
