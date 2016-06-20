@@ -47,7 +47,7 @@ class Bill < ActiveRecord::Base
       lastname: bill["SponsorAffiliation"]["Person"]["LastName"]
     ) if self.member == nil
 
-    scrape_bill_page if changed?
+    scrape_bill_page if changed? || self.summary == nil
     save! if changed?
   end
 
@@ -57,7 +57,9 @@ class Bill < ActiveRecord::Base
 
     get_vote_tallies(bill_page)
     get_latest_publication(bill_page)
+    save! if changed?
   end
+  handle_asynchronously :scrape_bill_page
 
   def get_vote_tallies(bill_page)
     vote_links = bill_page.css(".VoteLink").select { |vote| vote.attr("href") }
@@ -69,7 +71,6 @@ class Bill < ActiveRecord::Base
       end
     end
   end
-  handle_asynchronously :get_vote_tallies
 
   def get_latest_publication(bill_page)
     begin
@@ -78,11 +79,11 @@ class Bill < ActiveRecord::Base
       publication_xml = open(BASE_PARLIAMENT_URI + "/HousePublications/Publication.aspx?Language=E&Mode=1&DocId=#{doc_id}&xml=true").read
       publication_hash = Hash.from_xml(publication_xml)["Bill"]
       self.summary = publication_hash["Introduction"]["Summary"]["Provision"]["Text"]
+      self.latest_publication = doc_id
     rescue
       self.summary = "The electronic version of the bill is currently not available."
     end
   end
-  handle_asynchronously :get_latest_publication
 
   def bill_number
     return "#{prefix}-#{number}"
