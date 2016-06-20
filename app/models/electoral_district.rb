@@ -34,7 +34,7 @@ class ElectoralDistrict < ActiveRecord::Base
         )
         begin
           feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-          new_district.geo = feature.to_json if new_district.geo == nil
+          new_district.geo = feature.to_json if new_district.geo == nil || new_district.geo == "null"
           new_district.fednum = feature["properties"]["FEDNUM"] if new_district.fednum == nil
         rescue
           puts "Could not find FEDNUM for #{self.name}"
