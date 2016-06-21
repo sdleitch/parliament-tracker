@@ -52,7 +52,7 @@ class ElectoralDistrict < ActiveRecord::Base
           )
         end
 
-        new_district.save! if new_district.changed?
+        new_district.save!
       end
     end
     handle_asynchronously :create_districts
