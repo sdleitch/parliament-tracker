@@ -32,14 +32,14 @@ class ElectoralDistrict < ActiveRecord::Base
           name: district["Name"],
           province: district["ProvinceTerritoryName"]
         )
-        begin
+        # begin
           feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
           new_district.geo = feature.to_json if new_district.geo == nil || new_district.geo == "null"
           new_district.fednum = feature["properties"]["FEDNUM"] if new_district.fednum == nil
-        rescue
-          puts "Could not find FEDNUM for #{self.name}"
-          new_district.fednum = nil
-        end
+        # rescue
+        #   puts "Could not find FEDNUM for #{self.name}"
+        #   new_district.fednum = nil
+        # end
 
         # Find or create Member and associate, unless nil (vacant)
         ## This needs to be updated to NOT RUN EVERY NIGHT, but
