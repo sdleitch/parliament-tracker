@@ -32,13 +32,7 @@ class ElectoralDistrict < ActiveRecord::Base
           name: district["Name"],
           province: district["ProvinceTerritoryName"]
         )
-        begin
-          feature = @@features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-          new_district.geo = feature.to_json if new_district.geo == nil || new_district.geo == "null"
-          # new_district.fednum = feature["properties"]["FEDNUM"] if new_district.fednum == nil
-        rescue
-          new_district.geo = nil
-        end
+        new_district.geo = new_district.get_geography
 
         # Find or create Member and associate, unless nil (vacant)
         ## This needs to be updated to NOT RUN EVERY NIGHT, but
@@ -67,6 +61,12 @@ class ElectoralDistrict < ActiveRecord::Base
   ### END OF CLASS METHODS###
   ### START OF INSTANCE METHODS ###
 
+  def get_geography(geojson=@@districts_geojson)
+    geo = JSON.parse(geojson)
+    features = geo["features"]
+    feature_geo = features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
+    return feature_geo.to_json
+  end
 
   # Possible vote % in previous election
   # http://www.elections.ca/Scripts/vis/PastResults?L=e&ED=13002&EV=99&EV_TYPE=6&QID=-1&PAGEID=28
