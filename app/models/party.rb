@@ -6,11 +6,11 @@ class Party < ActiveRecord::Base
   # if either are over 90% of party votes, indicating if the vote was tightly whipped
   def party_vote(vote_tally)
     party_votes = Vote.where('vote_tally_id = ? AND member_id IN (?)', vote_tally.id, self.members.pluck(:id))
-    yeas = party_votes.where(vote_decision: true)
-    nays = party_votes.where(vote_decision: false)
-    if yeas.length.to_f / party_votes.length > 0.8
+    yeas = party_votes.select { |vote| vote.vote_decision == true }
+    nays = party_votes.select { |vote| vote.vote_decision == false }
+    if yeas.length.to_f / party_votes.length > 0.9
       return true
-    elsif nays.length.to_f / party_votes.length > 0.8
+    elsif nays.length.to_f / party_votes.length > 0.9
       return false
     end
   end
