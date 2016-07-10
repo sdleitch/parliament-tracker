@@ -3,12 +3,13 @@
   <table class="member-votes-table">
     <tbody>
       <tr class="votes-table-headings">
-        <th>Bill</th><th>Position</th><th>Vote result</th><th>Vote Date</th>
+        <th>Bill</th><th>Position</th><th>Party position</th><th>Vote result</th><th>Vote Date</th>
       </tr>
       <% sort_votes_by_date(locals[:limit]).each do |vote| %>
       <tr>
         <%= content_tag :td, link_to(vote.vote_tally.bill.bill_number, vote.vote_tally.bill) %>
         <%= content_tag :td, vote.vote_decision == true ? "Yea" : "Nay", class: vote.vote_decision %>
+        <%= content_tag :td, @member.party.party_vote(vote) == true ? "Yea" : "Nay", class: vote.vote_decision %>
         <%= content_tag :td, link_to(result(vote.vote_tally).titleize, vote.vote_tally), class: vote.vote_tally.agreed_to %>
         <%= content_tag :td, vote.vote_tally.date.strftime("%b %d, %Y") %>
       </tr>

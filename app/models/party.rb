@@ -8,9 +8,9 @@ class Party < ActiveRecord::Base
     party_votes = Vote.where('vote_tally_id = ? AND member_id IN (?)', vote_tally.id, self.members.pluck(:id))
     yeas = party_votes.select { |vote| vote.vote_decision == true }
     nays = party_votes.select { |vote| vote.vote_decision == false }
-    if yeas.length.to_f / party_votes.length > 0.9
+    if yeas.length.to_f / party_votes.length >= 0.5
       return true
-    elsif nays.length.to_f / party_votes.length > 0.9
+    elsif nays.length.to_f / party_votes.length > 0.5
       return false
     end
   end
