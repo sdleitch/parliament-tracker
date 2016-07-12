@@ -6,9 +6,11 @@ Rails.application.routes.draw do
   get 'member/:id' => 'member#show', as: 'member'
   get 'member/:id/votes' => 'votes#show'
 
-  # get 'party' => 'party#index'
+  get 'party' => 'party#index', as: 'party_index'
   get 'party/:id' => 'party#show', as: 'party'
+
   get 'bill/:id' => 'bill#show', as: 'bill'
+
   get 'vote-tally/:id' => 'vote_tally#show', as: 'vote_tally'
 
   # resources :member,
