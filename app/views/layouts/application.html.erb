@@ -7,12 +7,12 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<%= javascript_include_tag 'leaflet' if @member %>
-<%= stylesheet_link_tag    'leaflet' if @member %>
+<%= javascript_include_tag 'leaflet' if @member || @party %>
+<%= stylesheet_link_tag    'leaflet' if @member || @party %>
 <div class="content-wrapper">
   <%= yield %>
 </div>
 
-<%= javascript_include_tag 'district-map' if @member %>
+<%= javascript_include_tag 'district-map' if @member || @party %>
 </body>
 </html>

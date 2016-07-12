@@ -1,5 +1,6 @@
 class Party < ActiveRecord::Base
   has_many :members
+  has_many :electoral_districts, through: :members
 
   # Will gather votes from the passed VoteTally from Party Members
   # and compare yeas to nays, returning true of false

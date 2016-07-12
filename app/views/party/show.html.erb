@@ -1,4 +1,6 @@
-<%= @party.name %>
+<%= content_tag :h1, @party.name %>
+<%= content_tag :div, id: "map", data: { geo: party_geo } do %>
+<% end %>
 <ul>
 <% @party.members.each do |member| %>
   <li>
