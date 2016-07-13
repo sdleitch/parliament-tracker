@@ -24,10 +24,10 @@ function style(feature) {
 
 function onEachFeature(feature, layer) {
 	layer.on({
-	  mouseover: highlightFeature,
-	  mouseout: resetHighlight,
-  	click: zoomToFeature
-  });
+		mouseover: highlightFeature,
+		mouseout: resetHighlight,
+		click: zoomToFeature
+	});
 }
 
 function getColor(party) {
