@@ -9,7 +9,7 @@ var tiles = L.geoJson($('#map').data('geo'), {
 	style: style
 }).addTo(map);
 
-map_bounds = tiles.getBounds();
+var map_bounds = tiles.getBounds();
 map.fitBounds(map_bounds);
 
 function style(feature) {
