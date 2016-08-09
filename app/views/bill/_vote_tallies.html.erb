@@ -5,7 +5,7 @@
       <tr class="bill-vote-tallies-headings">
       <th>Vote Date</th><th>Vote result</th><th>Desc.</th>
       </tr>
-      <% sort_votes_tallies_by_date.each do |vote_tally| %>
+      <% sort_vote_tallies_by_date.each do |vote_tally| %>
       <tr>
         <%= content_tag :td, vote_tally.date.strftime("%b %d, %Y") %>
         <%= content_tag :td, link_to(result(vote_tally).titleize, vote_tally), class: vote_tally.agreed_to %>

@@ -1,0 +1,18 @@
+<div class="party-votes">
+  <h3>Votes</h3>
+  <table class="party-votes-table">
+    <tbody>
+      <tr class="votes-table-headings">
+        <th>Bill</th><th>Party position</th><th>Vote result</th><th>Vote Date</th>
+      </tr>
+      <% sort_vote_tallies_by_date(locals[:limit]).each do |vote_tally| %>
+      <tr>
+        <%= content_tag :td, link_to(vote_tally.bill.bill_number, vote_tally.bill) %>
+        <%= content_tag :td, @party.party_vote(vote_tally) == true ? "Yea" : "Nay", class: vote_tally.agreed_to %>
+        <%= content_tag :td, link_to(result(vote_tally).titleize, vote_tally), class: vote_tally.agreed_to %>
+        <%= content_tag :td, vote_tally.date.strftime("%b %d, %Y") %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

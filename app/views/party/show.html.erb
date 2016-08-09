@@ -2,6 +2,7 @@
 <%= content_tag :div, id: "map", data: { geo: party_geo } do %>
 <% end %>
 <%= content_tag :h3, "Holds #{@party.members.length} seats in the House of Commons." %>
+<%= render "votes", locals: { limit: 5 } %>
 <ul>
 <% @party.members.each do |member| %>
   <li>
