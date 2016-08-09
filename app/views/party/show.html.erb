@@ -1,6 +1,7 @@
 <%= content_tag :h1, @party.name, id: "party", data: { party: @party.name } %>
 <%= content_tag :div, id: "map", data: { geo: party_geo } do %>
 <% end %>
+<%= content_tag :h3, "Holds #{@party.members.length} seats in the House of Commons." %>
 <ul>
 <% @party.members.each do |member| %>
   <li>
