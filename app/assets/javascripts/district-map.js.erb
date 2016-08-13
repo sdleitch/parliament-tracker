@@ -52,9 +52,27 @@ function highlightFeature(e) {
 }
 
 function resetHighlight(e) {
-    tiles.resetStyle(e.target);
+  tiles.resetStyle(e.target);
 }
 
 function zoomToFeature(e) {
-    map.fitBounds(e.target.getBounds());
+  map.fitBounds(e.target.getBounds());
+	info.update(e.target.feature.properties);
 }
+
+// Reused/altered from Leaflet examples (http://leafletjs.com/examples/choropleth.html)
+
+var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+  this._div.innerHTML = (props ? "<a href='/electoral_district/" + props.FEDNUM + "' ><h3>" + props.ENNAME.split("--").join("—") + "</h3>" : '');
+};
+
+info.addTo(map);
