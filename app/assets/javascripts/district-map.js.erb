@@ -57,7 +57,9 @@ function resetHighlight(e) {
 
 function zoomToFeature(e) {
   map.fitBounds(e.target.getBounds());
-	info.update(e.target.feature.properties);
+	if (Object.keys(tiles._layers).length > 1) {
+		info.update(e.target.feature.properties);
+	}
 }
 
 // Reused/altered from Leaflet examples (http://leafletjs.com/examples/choropleth.html)
@@ -72,7 +74,9 @@ info.onAdd = function (map) {
 
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
-  this._div.innerHTML = (props ? "<a href='/electoral_district/" + props.FEDNUM + "' ><h3>" + props.ENNAME.split("--").join("—") + "</h3>" : '');
+  this._div.innerHTML = (props ? "<a href='/electoral_district/" + props.FEDNUM + "' ><h4>" + props.ENNAME.split("--").join("—") + "</h4>" : '<h4>Select a district</h4>');
 };
 
-info.addTo(map);
+if (Object.keys(tiles._layers).length > 1) {
+	info.addTo(map);
+}
