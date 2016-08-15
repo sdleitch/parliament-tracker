@@ -32,7 +32,7 @@ class ElectoralDistrict < ActiveRecord::Base
           name: district["Name"],
           province: district["ProvinceTerritoryName"]
         )
-        new_district.geo = new_district.get_geography
+        new_district.geo, new_district.fednum = new_district.get_geography
 
         # Find or create Member and associate, unless nil (vacant)
         ## This needs to be updated to NOT RUN EVERY NIGHT, but
@@ -65,7 +65,8 @@ class ElectoralDistrict < ActiveRecord::Base
     geo = JSON.parse(geojson)
     features = geo["features"]
     feature_geo = features.select { |feature| feature["properties"]["ENNAME"] == self.name.gsub("—", "--").encode(Encoding.find('ASCII'), @@encoding_options) }.first
-    return feature_geo.to_json
+    # return feature_geo.to_json, feature_geo["properties"]["FEDNUM"]
+    feature_geo != nil ? [feature_geo.to_json, feature_geo["properties"]["FEDNUM"]] : ["null", nil]
   end
 
   # Possible vote % in previous election
