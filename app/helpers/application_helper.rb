@@ -1,5 +1,6 @@
 module ApplicationHelper
-
+  
+  # Returns a <title> for each page
   def page_title
     case
     when @member
