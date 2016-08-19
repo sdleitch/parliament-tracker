@@ -1,7 +1,7 @@
 <div class="member-bills">
   <h3>Bills sponsored</h3>
   <% if @member.bills.length == 0 %>
-    <%= content_tag :p, "#{@member.fullname} has not sponsored any bills during Canada's 42d Parliament", class: "no-bill" %>
+    <%= content_tag :p, "#{@member.fullname} has not sponsored any bills during Canada's 42nd Parliament", class: "no-bill" %>
   <% else  %>
     <% sort_bills_by_date.each do |bill| %>
       <div class="member-bill">
