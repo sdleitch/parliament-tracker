@@ -4,12 +4,13 @@ Rails.application.routes.draw do
 
   get 'member' => 'member#index', as: 'member_index'
   get 'member/:id' => 'member#show', as: 'member'
-  get 'member/:id/votes' => 'votes#show'
+  get 'member/:id/votes' => 'votes#show_member'
 
   get 'electoral_district/:fednum' => 'electoral_district#show'
 
   get 'party' => 'party#index', as: 'party_index'
   get 'party/:id' => 'party#show', as: 'party'
+  get 'party/:id/votes' => 'votes#show_party'
 
   get 'bill/:id' => 'bill#show', as: 'bill'
 
