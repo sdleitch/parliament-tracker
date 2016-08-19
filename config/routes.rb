@@ -15,12 +15,6 @@ Rails.application.routes.draw do
 
   get 'vote-tally/:id' => 'vote_tally#show', as: 'vote_tally'
 
-  # resources :member,
-  #           :party,
-  #           :bill,
-  #           :vote_tally
-
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
