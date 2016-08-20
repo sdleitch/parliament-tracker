@@ -55,6 +55,13 @@ class ElectoralDistrict < ActiveRecord::Base
       return geo["features"]
     end
 
+    # Method to find which ElectoralDistrict a postal code is in
+    # def find_district_by_postal_code(postal_code)
+    #   postal_code.downcase!.gsub!(/(\W|_)/, "") # Downcase and strip any character
+    #                                             # which is not alphanumeric
+    #   postal_code_url = "http://elections.ca/scripts/vis/FindED?L=e&PC=" + postal_code
+    # end
+
   end
 
   ### END OF CLASS METHODS###
