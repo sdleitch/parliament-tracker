@@ -1,4 +1,11 @@
 <h1>Member#index</h1>
+
+<%= form_tag({controller: "member", action: "search"}, method: "post") do %>
+  <%= label_tag(:postal_code, "Search by postal code:") %>
+  <%= text_field_tag(:postal_code) %>
+  <%= submit_tag("Search") %>
+<% end %>
+
 <ul>
   <% @members.each do |member| %>
   <li>

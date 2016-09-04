@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'member/:id' => 'member#show', as: 'member'
   get 'member/:id/votes' => 'votes#show_member'
 
+  match '/search', to: 'member#search', via: 'post'
+
   get 'electoral_district/:fednum' => 'electoral_district#show'
 
   get 'party' => 'party#index', as: 'party_index'

@@ -57,14 +57,15 @@ class ElectoralDistrict < ActiveRecord::Base
 
     # Method to find which ElectoralDistrict a postal code is in
     def find_district_by_postal_code(postal_code)
-      postal_code.downcase!.gsub!(/(\W|_)/, "") # Downcase and strip any character
-                                                # which is not alphanumeric
+      postal_code.downcase! # Downcase postal code
+      postal_code.gsub!(/(\W|_)/, "") if /(\W|_)/.match(postal_code) != nil # Strip any character which is not alphanumeric
       postal_code_url = "http://elections.ca/scripts/vis/FindED?L=e&PC=" + postal_code
       page = open(postal_code_url) # Open url, will automatically follow redirect
       district_uri = URI(page.base_uri.to_s) # Get the uri string from redirect
       queries = CGI.parse(district_uri.query) # Parse the URI for queries (one is fednum)
       fednum = queries["ED"].first.to_i # Find the fednum
-      return electoral_district = ElectoralDistrict.where(fednum: fednum).first # return ElectoralDistrict
+      electoral_district = ElectoralDistrict.where(fednum: fednum).first # return ElectoralDistrict
+      return electoral_district
     end
 
   end
