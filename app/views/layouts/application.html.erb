@@ -9,8 +9,12 @@
 <body>
 <%= javascript_include_tag 'leaflet' if @member || @party %>
 <%= stylesheet_link_tag    'leaflet' if @member || @party %>
-<div class="content-wrapper">
-  <%= yield %>
+
+<div class="main-wrapper">
+  <%= render "layouts/header" %>
+  <div class="content-wrapper">
+    <%= yield %>
+  </div>
 </div>
 
 <%= javascript_include_tag 'district-map' if @member || @party %>
