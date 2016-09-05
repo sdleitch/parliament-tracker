@@ -33,6 +33,7 @@ module ParliamentTracker
       storage: :s3,
       url: ':s3_domain_url',
       path: '/:class/:attachment/:id_partition/:style/:filename',
+      s3_protocol: 'https',
       s3_credentials: {
         access_key_id: ENV["S3_KEY_ID"],
         secret_access_key: ENV["S3_ACCESS_KEY"],
