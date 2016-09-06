@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# Declare Ruby version for Heroku
+ruby '2.2.0'
+
 gem 'nokogiri'
 gem 'paperclip'
 gem 'delayed_job_active_record'
