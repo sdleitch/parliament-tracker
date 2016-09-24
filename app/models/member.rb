@@ -29,7 +29,7 @@ class Member < ActiveRecord::Base
       members_hash = scrape_members
 
       members_hash.each do |member|
-        new_member = Member.find_or_create_by(
+        new_member = self.find_or_create_by(
           firstname: member["PersonOfficialFirstName"],
           lastname: member["PersonOfficialLastName"]
         )
@@ -39,6 +39,7 @@ class Member < ActiveRecord::Base
           member["CaucusShortName"]
         )
       end
+      self.remove_old_members(members_hash)
     end
     handle_asynchronously :create_members
 
@@ -50,6 +51,7 @@ class Member < ActiveRecord::Base
         end
       end
     end
+    handle_asynchronously :remove_old_members
 
   end
 
