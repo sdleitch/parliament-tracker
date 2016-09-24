@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160619145725) do
+ActiveRecord::Schema.define(version: 20160924004109) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(version: 20160619145725) do
     t.integer  "party_id"
     t.string   "firstname"
     t.string   "lastname"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "email"
     t.string   "website"
     t.integer  "electoral_district_id"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20160619145725) do
     t.datetime "headshot_updated_at"
     t.date     "date_elected"
     t.decimal  "vote_percent"
+    t.boolean  "sitting",               default: true
   end
 
   add_index "members", ["electoral_district_id"], name: "index_members_on_electoral_district_id"

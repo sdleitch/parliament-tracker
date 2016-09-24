@@ -1,15 +1,7 @@
-<h1>Member#index</h1>
+<h3>Search for an MP by postal code...</h3><br>
 
 <%= form_tag({controller: "member", action: "search"}, method: "post") do %>
   <%= label_tag(:postal_code, "Search by postal code:") %>
   <%= text_field_tag(:postal_code) %>
   <%= submit_tag("Search") %>
 <% end %>
-
-<ul>
-  <% @members.each do |member| %>
-  <li>
-    <%= link_to member.fullname, member %> <%= link_to member.party.name, member.party %>
-  </li>
-  <% end %>
-</ul>
