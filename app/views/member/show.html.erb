@@ -1,12 +1,18 @@
 <div class="member-info">
 <%= content_tag :h1, name_with_honorific, class: "member" %>
   <%= image_tag @member.headshot.url, class: "member-headshot" %>
-  <h3 class="member-title">
-    Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
-  </h3>
-  <p>Email: <%= link_to(@member.email, "mailto:#{@member.email}") %></p>
+  <% if @member.sitting? %>
+    <h3 class="member-title">
+      Member of Parliament for <%= @member.electoral_district.name %> (<%= link_to @member.party.name, @member.party, id: "party", data: { party: @member.party.name } %>, <%= @member.electoral_district.province %>)
+    </h3>
+    <p>Email: <%= link_to(@member.email, "mailto:#{@member.email}") %></p>
+  <% else %>
+    <p><%= @member.fullname %> is no longer a sitting MP in the House of Commons.</p>
+  <% end %>
 </div>
-<%= content_tag :div, id: "map", data: { geo: @member.electoral_district.geo } do %>
+<% if @member.sitting? %>
+  <%= content_tag :div, id: "map", data: { geo: @member.electoral_district.geo } do %>
+  <% end %>
 <% end %>
 <%= render "bills" %>
 <%= render "votes", locals: { limit: 5 } %>

@@ -5,14 +5,15 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <%= javascript_include_tag 'leaflet' if @member || @party %>
+  <%= stylesheet_link_tag    'leaflet' if @member || @party %>
 </head>
 <body>
-<%= javascript_include_tag 'leaflet' if @member || @party %>
-<%= stylesheet_link_tag    'leaflet' if @member || @party %>
 
 <div class="main-wrapper">
   <%= render "layouts/header" %>
   <div class="content-wrapper">
+    <%= flash[:notice] if flash[:notice] %>
     <%= yield %>
   </div>
 </div>

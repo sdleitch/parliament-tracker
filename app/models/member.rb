@@ -9,7 +9,6 @@ class Member < ActiveRecord::Base
 
   validates :firstname, presence: true
   validates :lastname, presence: true
-  validates :email, uniqueness: true
 
   attr_reader :headshot_remote_url
   has_attached_file :headshot
@@ -42,6 +41,16 @@ class Member < ActiveRecord::Base
       end
     end
     handle_asynchronously :create_members
+
+    def remove_old_members(members_hash)
+      names = members_hash.map { |m| m["PersonOfficialFirstName"] + " " + m["PersonOfficialLastName"] }
+      self.all.each do |member|
+        if !member.fullname.in?(names)
+          member.remove_from_house
+        end
+      end
+    end
+
   end
 
   ### END OF CLASS METHODS###
@@ -77,6 +86,16 @@ class Member < ActiveRecord::Base
       end
       save! if changed?
     end
+  end
+
+  def remove_from_house
+    self.party = nil
+    self.electoral_district = nil
+    self.honorific = nil
+    self.email = nil
+    self.website = nil
+    self.sitting = false
+    save! if changed?
   end
 
   # get MP email from www.parl.gc.ca
