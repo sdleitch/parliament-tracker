@@ -11,7 +11,12 @@ class MemberController < ApplicationController
     @electoral_district = ElectoralDistrict.find_district_by_postal_code(params[:postal_code])
     if @electoral_district != nil
       @member = @electoral_district.member
-      redirect_to @member
+      if @member == nil
+        flash[:notice] = "Sorry! We were unable to find that postal code. It is possibly not represented in Parliament right now."
+        redirect_to member_index_path
+      else
+        redirect_to @member
+      end
     else
       flash[:notice] = "Sorry! We were unable to find that postal code. It is possibly not represented in Parliament right now."
       redirect_to member_index_path
