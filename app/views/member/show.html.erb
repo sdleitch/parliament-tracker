@@ -11,8 +11,12 @@
   <% end %>
 </div>
 <% if @member.sitting? %>
-  <%= content_tag :div, id: "map", data: { geo: @member.electoral_district.geo } do %>
-  <% end %>
+  <!--
+    This is not a content_tag because it seems to load maps w/o cache more reliably.
+    Unsure why.
+  -->
+  <div id="map" data-geo='<%= @member.electoral_district.geo %>'>
+  </div>
 <% end %>
 <%= render "bills" %>
 <%= render "votes", locals: { limit: 5 } %>
