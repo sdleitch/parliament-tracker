@@ -67,7 +67,7 @@ class Bill < ActiveRecord::Base
     if vote_links.length > self.vote_tallies.length
       vote_links.each do |vote_link|
         new_tally = VoteTally.create_vote_tally(BASE_PARLIAMENT_URI + vote_link.attr("href"))
-        self.vote_tallies << new_tally
+        self.vote_tallies << new_tally if new_tally
       end
     end
   end

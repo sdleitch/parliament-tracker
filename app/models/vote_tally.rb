@@ -4,32 +4,36 @@ class VoteTally < ActiveRecord::Base
   has_many :votes, dependent: :destroy
 
   def self.create_vote_tally(vote_page_uri)
-    page = Nokogiri::HTML(open(vote_page_uri))
-    vote_details = page.at_css('#VoteDetailsHeader')
-    vote_number = vote_details.at_css('div div').content.strip[/\d+/].to_i
-    date = vote_details.at_css('div div:nth-child(3)').content.to_date
-    para = vote_details.at_css('.voteContextArea').content.strip if vote_details.at_css('.voteContextArea')
+    if vote_page_uri =~ /\Ahttp:\/\/www.parl.gc.ca\/HouseChamberBusiness\/ChamberVoteDetail/
+      page = Nokogiri::HTML(open(vote_page_uri))
+      vote_details = page.at_css('#VoteDetailsHeader')
+      vote_number = vote_details.at_css('div div').content.strip[/\d+/].to_i
+      date = vote_details.at_css('div div:nth-child(3)').content.to_date
+      para = vote_details.at_css('.voteContextArea').content.strip if vote_details.at_css('.voteContextArea')
 
-    new_tally = VoteTally.find_or_create_by(
+      new_tally = VoteTally.find_or_create_by(
       vote_number: vote_number,
       date: date,
       para: para,
-    )
+      )
 
-    if new_tally.member == nil
-      link_nodes = page.css("#VoteDetailsHeader > div:nth-child(2) a.WebOption")
-      member_link_node = link_nodes.find { |node| node.attr('onclick') =~ /'Affiliation',\d{6},/ }
-      redirect_id = member_link_node.attr('onclick').match(/\d{6}/).to_s
-      member_page_uri = BASE_PARLIAMENT_URI + "/parliamentarians/en/members/profileredirect?affiliationId=#{redirect_id}"
-      new_tally.member = new_tally.get_vote_sponsor(member_page_uri)
+      if new_tally.member == nil
+        link_nodes = page.css("#VoteDetailsHeader > div:nth-child(2) a.WebOption")
+        member_link_node = link_nodes.find { |node| node.attr('onclick') =~ /'Affiliation',\d{6},/ }
+        redirect_id = member_link_node.attr('onclick').match(/\d{6}/).to_s
+        member_page_uri = BASE_PARLIAMENT_URI + "/parliamentarians/en/members/profileredirect?affiliationId=#{redirect_id}"
+        new_tally.member = new_tally.get_vote_sponsor(member_page_uri)
+      end
+
+      votes_xml = open(vote_page_uri.to_s + "&xml=True").read
+      votes_hash = Hash.from_xml(votes_xml)["Vote"]["Participant"]
+      new_tally.get_votes(votes_hash) if new_tally.votes.length != votes_hash.length
+      new_tally.agreed_to = new_tally.tally_votes if new_tally.agreed_to == nil
+      new_tally.save!
+      return new_tally
+    else
+      return nil
     end
-
-    votes_xml = open(vote_page_uri.to_s + "&xml=True").read
-    votes_hash = Hash.from_xml(votes_xml)["Vote"]["Participant"]
-    new_tally.get_votes(votes_hash) if new_tally.votes.length != votes_hash.length
-    new_tally.agreed_to = new_tally.tally_votes if new_tally.agreed_to == nil
-    new_tally.save!
-    return new_tally
   end
 
   def get_votes(votes_hash)
