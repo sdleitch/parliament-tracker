@@ -41,6 +41,10 @@ module ParliamentTracker
       }
     }
 
+    config.action_dispatch.default_headers = {
+      'X-Frame-Options' => 'ALLOWALL'
+    }
+
     # To parse README.md and other potential Markdown files (e.g. full bill text)
     config.markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
   end
