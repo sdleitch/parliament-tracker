@@ -12,4 +12,8 @@ module MemberHelper
     sorted_bills = Bill.where(member_id: @member.id).limit(limit).joins(:member).order(last_event_date: :desc)
   end
 
+  def votes_against_party
+    votes = @member.votes.reject { |vote| vote.vote_decision == @member.party.party_vote(vote.vote_tally) }
+  end
+
 end

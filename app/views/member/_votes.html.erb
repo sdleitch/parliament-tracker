@@ -1,5 +1,6 @@
 <div class="member-votes">
   <h3>Votes</h3>
+  <p><%= @member.fullname %> has voted against the <%= @member.party.name %> line on <%= votes_against_party.length %> of <%= @member.votes.length %> votes.</p>
   <table class="member-votes-table">
     <tbody>
       <tr class="votes-table-headings">
