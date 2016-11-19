@@ -9,7 +9,7 @@
       <tr>
         <%= content_tag :td, link_to(vote.vote_tally.bill.bill_number, vote.vote_tally.bill) %>
         <%= content_tag :td, vote.vote_decision == true ? "Yea" : "Nay", class: vote.vote_decision %>
-        <% if @member.sitting? %><%= content_tag :td, @member.party.party_vote(vote) == true ? "Yea" : "Nay", class: vote.vote_decision %><% end %>
+        <% if @member.sitting? %><%= content_tag :td, @member.party.party_vote(vote.vote_tally) == true ? "Yea" : "Nay", class: @member.party.party_vote(vote.vote_tally) %><% end %>
         <%= content_tag :td, link_to(result(vote.vote_tally).titleize, vote.vote_tally), class: vote.vote_tally.agreed_to %>
         <%= content_tag :td, vote.vote_tally.date.strftime("%b %d, %Y") %>
       </tr>
