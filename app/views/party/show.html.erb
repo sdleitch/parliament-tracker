@@ -3,4 +3,4 @@
 <% end %>
 <%= content_tag :h3, "Holds #{@party.members.length} seats in the House of Commons." %>
 <%= render "votes", locals: { limit: 5 } %>
-<%= content_tag :p, link_to("See how all the party's votes", "#{@party.id}/votes") %>
+<%= content_tag :p, link_to("See all the party's votes", "#{@party.id}/votes") %>
