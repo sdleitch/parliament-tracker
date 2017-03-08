@@ -6,6 +6,7 @@ class Member < ActiveRecord::Base
   has_many :bills
   has_many :vote_tallies
   has_many :votes
+  has_many :expense_reports
 
   validates :firstname, presence: true
   validates :lastname, presence: true
