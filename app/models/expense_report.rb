@@ -1,4 +1,6 @@
 class ExpenseReport < ActiveRecord::Base
+  include ActiveModel::Dirty
+
   belongs_to :member
 
   class << self
@@ -13,16 +15,29 @@ class ExpenseReport < ActiveRecord::Base
 
       start_date = expenses_hash["startDate"]
       end_date = expenses_hash["endDate"]
+      quarter = expenses_hash["id"]
 
       reports = expenses_hash["Report"]
 
       reports.each do |report|
+        total = report['ExpenditureTotals']['Total']['value'].to_i
+
         member = Member.find_by(
-        firstname: report["Member"]["firstName"],
-        lastname: report["Member"]["lastName"]
+          firstname: report["Member"]["firstName"],
+          lastname: report["Member"]["lastName"]
         )
-        p member
+
+        member_report = ExpenseReport.find_or_create_by(
+          member: member,
+          quarter: quarter,
+          total: total,
+          start_date: start_date,
+          end_date: end_date
+        )
+
+        member_report.save! if member_report.changed?
       end
+
     end
 
   end
