@@ -1,0 +1,8 @@
+<div class="member-expense-reports">
+  <h3>Expense Reports</h3>
+  <% if @member.expense_reports.length > 0 %>
+    <%= number_to_currency(@member.expense_reports.sort.first.total) %>
+  <% else %>
+    <p>There are no expense reports for this MP. Think there should be? Check <a href="http://www.parl.gc.ca/PublicDisclosure/MemberExpenditures.aspx">here</a>.</p>
+  <% end %>
+</div>
