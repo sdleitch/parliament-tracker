@@ -1,7 +1,15 @@
 <div class="member-expense-reports">
   <h3>Expense Reports</h3>
   <% if @member.expense_reports.length > 0 %>
-    <%= number_to_currency(@member.expense_reports.sort.first.total) %>
+    <% @member.expense_reports.each do |report| %>
+      <p>
+        For the period between <%= report.start_date.strftime("%b %d, %Y") %> and <%= report.end_date.strftime("%b %d, %Y") %>
+        <%= @member.fullname %> claimed <%= number_to_currency(report.total) %> in expenses.
+      </p>
+    <% end %>
+    <p>
+      To see the detailed breakdowns please visit the <a href="http://www.parl.gc.ca/about/house/boie/boie-expenditures-e.html">Parliament of Canada website</a>.
+    </p>
   <% else %>
     <p>There are no expense reports for this MP. Think there should be? Check <a href="http://www.parl.gc.ca/PublicDisclosure/MemberExpenditures.aspx">here</a>.</p>
   <% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170308034222) do
+ActiveRecord::Schema.define(version: 20170316005040) do
 
   create_table "bills", force: :cascade do |t|
     t.date     "date_introduced"
@@ -63,8 +63,10 @@ ActiveRecord::Schema.define(version: 20170308034222) do
     t.string   "quarter"
     t.integer  "member_id"
     t.integer  "total"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "members_budget"
+    t.integer  "house_resources"
   end
 
   add_index "expense_reports", ["member_id"], name: "index_expense_reports_on_member_id"

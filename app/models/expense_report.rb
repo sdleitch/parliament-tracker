@@ -20,7 +20,9 @@ class ExpenseReport < ActiveRecord::Base
       reports = expenses_hash["Report"]
 
       reports.each do |report|
-        total = report['ExpenditureTotals']['Total']['value'].to_i
+        total = report["ExpenditureTotals"]["Total"]["value"].to_i
+        members_budget = report["ExpenditureTotals"]["MembersBudget"]["value"].to_i
+        house_resources = report["ExpenditureTotals"]["ResourcesProvidedByTheHouse"]["value"]
 
         member = Member.find_by(
           firstname: report["Member"]["firstName"],
@@ -30,13 +32,17 @@ class ExpenseReport < ActiveRecord::Base
         member_report = ExpenseReport.find_or_create_by(
           member: member,
           quarter: quarter,
-          total: total,
           start_date: start_date,
           end_date: end_date
         )
 
+        member_report.total = total
+        member_report.members_budget = members_budget
+        member_report.house_resources = house_resources
+
         member_report.save! if member_report.changed?
       end
+      handle_asynchronously :create_reports
 
     end
 

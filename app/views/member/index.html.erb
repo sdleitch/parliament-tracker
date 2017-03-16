@@ -5,6 +5,6 @@
   <%= text_field_tag(:postal_code) %>
   <%= submit_tag("Search") %>
 <% end %>
-<h3>...or pick your electoral distict from the map!</h3>
+<h3>...or pick your electoral district from the map!</h3>
 <%= content_tag :div, id: "map", data: { geo: all_party_geo } do %>
 <% end %>
