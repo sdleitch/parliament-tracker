@@ -42,7 +42,6 @@ class ExpenseReport < ActiveRecord::Base
 
         member_report.save! if member_report.changed?
       end
-      handle_asynchronously :create_reports
 
     end
 
